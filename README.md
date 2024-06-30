@@ -1,3 +1,23 @@
+## Get Your Money Up Not Your Funny Up
+
+App to help you get your money up and not your funny up.
+
+## Features
+
+TBD
+
+## Tech Stack
+
+- React
+- Next.js
+- Tailwind CSS
+- Clerk (Authentication)
+- Firebase
+
+## Authentication
+
+- Clerk
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
