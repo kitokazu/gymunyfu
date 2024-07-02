@@ -1,4 +1,4 @@
-## Get Your Money Up Not Your Funny Up
+# Get Your Money Up Not Your Funny Up
 
 App to help you get your money up and not your funny up.
 
