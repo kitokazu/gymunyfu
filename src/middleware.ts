@@ -1,6 +1,10 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-const isProtectedRoute = createRouteMatcher(["/home(.*)", "/forum(.*)"]);
+// const isProtectedRoute = createRouteMatcher(["/home(.*)", "/forum(.*)"]);
+const isProtectedRoute = createRouteMatcher(["/forum(.*)"]);
+
+// FOR NOW WE CAN REMOVE THE HOME PAGE FOR EDITING REASONS
+
 // const isPublicRoute = createRouteMatcher([
 //   "/home",
 //   "/sign-in(.*)",
