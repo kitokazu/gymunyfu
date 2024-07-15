@@ -2,6 +2,8 @@
 
 App to help you get your money up and not your funny up.
 
+Design Link: https://www.figma.com/design/1i2lRn4qQH7WobKqvXPE7T/Get-Your-Money-Up-Not-Your-Funny-Up?node-id=0-1&t=nUaraoBYZ0taojZX-0
+
 ## Features
 
 TBD
