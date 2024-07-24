@@ -1,19 +1,45 @@
+"use client";
 import React from "react";
-import { UserButton } from "@clerk/nextjs";
-import Link from "next/link";
-import { ThemeToggler } from "./ThemeToggler";
-import { SignOutButton } from "@clerk/nextjs";
 
-export default function Header() {
+import Link from "next/link";
+import { useSelectedLayoutSegment } from "next/navigation";
+
+import useScroll from "@/hooks/use-scroll";
+import { cn } from "@/lib/utils";
+
+const Header = () => {
+  const scrolled = useScroll(5);
+  const selectedLayout = useSelectedLayoutSegment();
+
   return (
-    <header className="flex items-center justify-between p-4 px-10">
-      <Link href="/">GYMUNYFU</Link>
-      <div className="flex justify-center gap-6 align-middle">
-        <ThemeToggler />
-        <div className="cursor-pointer">Profile</div>
-        <SignOutButton />
+    <div
+      className={cn(
+        `sticky inset-x-0 top-0 z-30 w-full border-b border-gray-200 transition-all`,
+        {
+          "border-b border-gray-200 bg-white/75 backdrop-blur-lg": scrolled,
+          "border-b border-gray-200 bg-white": selectedLayout,
+        },
+      )}
+    >
+      <div className="flex h-[47px] items-center justify-between px-4">
+        <div className="flex items-center space-x-4">
+          <Link
+            href="/"
+            className="flex flex-row items-center justify-center space-x-3 md:hidden"
+          >
+            <span className="h-7 w-7 rounded-lg bg-zinc-300" />
+            <span className="flex text-xl font-bold">GYMUNYFU</span>
+          </Link>
+        </div>
+
+        <div className="hidden md:block">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-zinc-300 text-center">
+            <span className="text-sm font-semibold">$$</span>
+          </div>
+        </div>
       </div>
-      {/* <UserButton /> */}
-    </header>
+    </div>
   );
-}
+};
+
+export default Header;

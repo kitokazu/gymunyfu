@@ -5,6 +5,9 @@ import "./globals.css";
 import Header from "@/components/Header";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
+import { useRouter } from "next/router";
+import PageWrapper from "@/components/page-wrapper";
+import HeaderMobile from "@/components/Header-Mobile";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -36,8 +39,16 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <Header />
-            {children}
+            <div className="flex">
+              {/* <SideNav /> */}
+              <main className="flex-1">
+                {/* <MarginWidthWrapper> */}
+                <Header />
+                <HeaderMobile />
+                <PageWrapper>{children}</PageWrapper>
+                {/* </MarginWidthWrapper> */}
+              </main>
+            </div>
           </ThemeProvider>
         </body>
       </html>
