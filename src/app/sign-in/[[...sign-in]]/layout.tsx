@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
-import "./globals.css";
+// import "../globals.css;
 import Header from "@/components/Header";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -24,28 +24,24 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
-      <html lang="en" className="h-full">
-        <body
-          className={cn(
-            "h-full bg-background font-sans antialiased",
-            fontSans.variable,
-          )}
+    <html lang="en" className="h-full">
+      <body
+        className={cn(
+          "h-full bg-background font-sans antialiased",
+          fontSans.variable,
+        )}
+      >
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
         >
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <HeaderMobile />
-            <div className="flex h-full">
-              <SideNav />
-              <div className="w-full">{children}</div>
-            </div>
-          </ThemeProvider>
-        </body>
-      </html>
-    </ClerkProvider>
+          <div className="flex h-full">
+            <div className="w-full">{children}</div>
+          </div>
+        </ThemeProvider>
+      </body>
+    </html>
   );
 }

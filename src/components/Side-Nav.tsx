@@ -11,6 +11,7 @@ import { NavItems } from "@/config";
 import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ThemeToggle } from "./theme-toggle";
+import { Smile } from "lucide-react";
 
 export default function SideNav() {
   const navItems = NavItems();
@@ -40,7 +41,7 @@ export default function SideNav() {
   };
 
   return (
-    <div className="pr-4">
+    <div className="">
       <div
         className={cn(
           isSidebarExpanded ? "w-[200px]" : "w-[68px]",
@@ -50,7 +51,12 @@ export default function SideNav() {
         <aside className="flex h-full w-full columns-1 flex-col overflow-x-hidden break-words px-4">
           {/* Top */}
           <div className="relative mt-4 pb-2">
-            <div className="flex flex-col space-y-1">
+            {/* Profile */}
+            <div className="flex flex-col items-center justify-center gap-4 align-middle">
+              <Smile className="" />
+              <div className="">sampleemail.com</div>
+            </div>
+            <div className="mt-8 flex flex-col space-y-1">
               {navItems.map((item, idx) => {
                 if (item.position === "top") {
                   return (

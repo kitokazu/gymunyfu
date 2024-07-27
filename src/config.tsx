@@ -1,6 +1,6 @@
 import { usePathname } from "next/navigation";
-
 import { Bell, Briefcase, Home, Settings, User, LogOut } from "lucide-react";
+import { SignOutButton } from "@clerk/nextjs";
 
 export const NavItems = () => {
   const pathname = usePathname();
@@ -41,7 +41,14 @@ export const NavItems = () => {
     {
       name: "Sign Out",
       href: "/",
-      icon: <LogOut size={20} />,
+      icon: (
+        <>
+          <SignOutButton>
+            <LogOut size={20} />
+          </SignOutButton>
+        </>
+      ),
+
       active: isNavItemActive(pathname, "/settings"),
       position: "bottom",
     },
