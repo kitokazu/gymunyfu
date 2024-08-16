@@ -13,6 +13,8 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ThemeToggle } from "./theme-toggle";
 import { Smile } from "lucide-react";
 
+const EMAIL = "sampleemail.com";
+
 export default function SideNav() {
   const navItems = NavItems();
 
@@ -52,11 +54,13 @@ export default function SideNav() {
           {/* Top */}
           <div className="relative mt-4 pb-2">
             {/* Profile */}
-            <div className="flex flex-col items-center justify-center gap-4 align-middle">
-              <Smile className="" />
-              <div className="">sampleemail.com</div>
+            <div className="flex flex-col items-center justify-center gap-4 align-middle text-lg">
+              <Smile className="text-neutral-500 dark:text-neutral-400" />
+              <div className="text-neutral-500 dark:text-neutral-400">
+                {isSidebarExpanded ? EMAIL : ""}
+              </div>
             </div>
-            <div className="mt-8 flex flex-col space-y-1">
+            <div className="mt-8 flex flex-col space-y-4">
               {navItems.map((item, idx) => {
                 if (item.position === "top") {
                   return (
@@ -134,7 +138,7 @@ export const SideNavItem: React.FC<{
               : "text-neutral-500 hover:bg-neutral-200 hover:text-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-white"
           }`}
         >
-          <div className="font-base relative flex flex-row items-center space-x-2 rounded-md px-2 py-1.5 text-sm duration-100">
+          <div className="font-base relative flex flex-row items-center space-x-2 rounded-md px-2 py-1.5 text-lg duration-100">
             {icon}
             <span>{label}</span>
           </div>

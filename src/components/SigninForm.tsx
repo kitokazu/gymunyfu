@@ -45,9 +45,7 @@ const SigninForm = ({ signInWithEmail, clerkError }: SignInFormProps) => {
               type="password"
               required
             />
-            <h2 className="mb-8 text-slate-700">
-              {clerkError && <p>{clerkError}</p>}
-            </h2>
+            <h2 className="mb-8 text-slate-700">{clerkError}</h2>
             <button
               className="mb-6 h-12 w-full rounded-md bg-slate-700 text-sm font-light text-white hover:bg-white hover:text-blue-900"
               type="submit"

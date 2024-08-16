@@ -25,20 +25,6 @@ export const NavItems = () => {
       position: "top",
     },
     {
-      name: "Notifications",
-      href: "/notifications",
-      icon: <Bell size={20} />,
-      active: isNavItemActive(pathname, "/notifications"),
-      position: "top",
-    },
-    {
-      name: "Projects",
-      href: "/projects",
-      icon: <Briefcase size={20} />,
-      active: isNavItemActive(pathname, "/projects"),
-      position: "top",
-    },
-    {
       name: "Sign Out",
       href: "/",
       icon: (
@@ -48,7 +34,6 @@ export const NavItems = () => {
           </SignOutButton>
         </>
       ),
-
       active: isNavItemActive(pathname, "/settings"),
       position: "bottom",
     },

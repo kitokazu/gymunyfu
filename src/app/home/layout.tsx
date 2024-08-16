@@ -24,26 +24,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full">
-      <body
-        className={cn(
-          "h-full bg-background font-sans antialiased",
-          fontSans.variable,
-        )}
-      >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <HeaderMobile />
-          <div className="flex h-full">
-            <SideNav />
-            <div className="w-full">{children}</div>
-          </div>
-        </ThemeProvider>
-      </body>
-    </html>
+    <div className="h-full">
+      <HeaderMobile />
+      <div className="flex h-full">
+        <SideNav />
+        <div className="w-full">{children}</div>
+      </div>
+    </div>
   );
 }
