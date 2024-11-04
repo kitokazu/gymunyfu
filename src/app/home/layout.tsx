@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
 import HeaderMobile from "@/components/Header-Mobile";
 import SideNav from "@/components/Side-Nav";
+import Watchlist from "@/components/Watchlist";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -29,6 +30,7 @@ export default function RootLayout({
       <div className="flex h-full">
         <SideNav />
         <div className="w-full">{children}</div>
+        <Watchlist />
       </div>
     </div>
   );

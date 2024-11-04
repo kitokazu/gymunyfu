@@ -46,7 +46,7 @@ export default function SideNav() {
     <div className="">
       <div
         className={cn(
-          isSidebarExpanded ? "w-[200px]" : "w-[68px]",
+          isSidebarExpanded ? "w-[250px]" : "w-[68px]",
           "hidden h-full transform border-r bg-accent transition-all duration-300 ease-in-out sm:flex",
         )}
       >

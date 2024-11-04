@@ -1,12 +1,20 @@
 import React from "react";
-import { UserButton } from "@clerk/nextjs";
-import { Divide } from "lucide-react";
+import CreatePost from "@/components/CreatePost";
 
 export default function Home() {
   return (
-    <div className="flex flex-col items-center py-6">
-      <h1 className="mr-40 text-3xl font-bold">Feed</h1>
+    <section className="flex flex-col items-center py-6">
+      <header>
+        <h1 className="text-3xl font-bold">Feed</h1>
+      </header>
       <hr className="my-4 w-full border-gray-300" />
-    </div>
+
+      <main className="w-full">
+        <div className="px-6 lg:px-48">
+          <CreatePost />
+        </div>
+        <hr className="my-4 w-full border-gray-300" />
+      </main>
+    </section>
   );
 }
