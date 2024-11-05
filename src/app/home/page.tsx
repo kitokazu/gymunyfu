@@ -10,7 +10,7 @@ export default function Home() {
       <hr className="my-4 w-full border-gray-300" />
 
       <main className="w-full">
-        <div className="px-6 lg:px-48">
+        <div className="px-6 2xl:px-40">
           <CreatePost />
         </div>
         <hr className="my-4 w-full border-gray-300" />

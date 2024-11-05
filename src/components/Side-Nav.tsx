@@ -12,6 +12,8 @@ import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ThemeToggle } from "./theme-toggle";
 import { Smile } from "lucide-react";
+import { useAuth } from "@clerk/nextjs";
+import { useUser } from "@clerk/nextjs";
 
 const EMAIL = "sampleemail.com";
 
@@ -39,8 +41,13 @@ export default function SideNav() {
   }, [isSidebarExpanded]);
 
   const toggleSidebar = () => {
+    user;
     setIsSidebarExpanded(!isSidebarExpanded);
   };
+
+  const { userId, sessionId, getToken } = useAuth();
+  const { isLoaded, isSignedIn, user } = useUser();
+  const userEmail = user?.primaryEmailAddress?.emailAddress;
 
   return (
     <div className="">
@@ -57,7 +64,7 @@ export default function SideNav() {
             <div className="flex flex-col items-center justify-center gap-4 align-middle text-lg">
               <Smile className="text-neutral-500 dark:text-neutral-400" />
               <div className="text-neutral-500 dark:text-neutral-400">
-                {isSidebarExpanded ? EMAIL : ""}
+                {isSidebarExpanded ? userEmail : ""}
               </div>
             </div>
             <div className="mt-8 flex flex-col space-y-4">
