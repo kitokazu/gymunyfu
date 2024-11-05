@@ -10,7 +10,6 @@ export default function Profile() {
         <div className="px-6 lg:px-48"></div>
         <hr className="my-4 w-full border-gray-300" />
       </main>
-      s
     </section>
   );
 }
