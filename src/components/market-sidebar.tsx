@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { ArrowDown, ArrowUp, Pin, PinOff } from 'lucide-react'
+import { ArrowDown, ArrowUp, Pin, PinOff } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -8,24 +8,24 @@ import {
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarHeader,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { Button } from "@/components/ui/button"
-import { useState } from "react"
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 interface StockData {
-  symbol: string
-  name: string
-  price: number
-  change: number
-  changePercent: number
-  isPinned?: boolean
+  symbol: string;
+  name: string;
+  price: number;
+  change: number;
+  changePercent: number;
+  isPinned?: boolean;
 }
 
 export function MarketSidebar() {
@@ -36,7 +36,7 @@ export function MarketSidebar() {
       price: 178.72,
       change: 2.34,
       changePercent: 1.32,
-      isPinned: true
+      isPinned: true,
     },
     {
       symbol: "MSFT",
@@ -44,7 +44,7 @@ export function MarketSidebar() {
       price: 376.17,
       change: -1.25,
       changePercent: -0.33,
-      isPinned: true
+      isPinned: true,
     },
     {
       symbol: "GOOGL",
@@ -52,7 +52,7 @@ export function MarketSidebar() {
       price: 142.65,
       change: 1.87,
       changePercent: 1.32,
-      isPinned: false
+      isPinned: false,
     },
     {
       symbol: "AMZN",
@@ -60,7 +60,7 @@ export function MarketSidebar() {
       price: 145.24,
       change: 0.98,
       changePercent: 0.68,
-      isPinned: false
+      isPinned: false,
     },
     {
       symbol: "TSLA",
@@ -68,19 +68,21 @@ export function MarketSidebar() {
       price: 237.45,
       change: -3.21,
       changePercent: -1.33,
-      isPinned: true
-    }
-  ])
+      isPinned: true,
+    },
+  ]);
 
   const togglePin = (symbol: string) => {
-    setStocks(stocks.map(stock => 
-      stock.symbol === symbol 
-        ? { ...stock, isPinned: !stock.isPinned }
-        : stock
-    ))
-  }
+    setStocks(
+      stocks.map((stock) =>
+        stock.symbol === symbol
+          ? { ...stock, isPinned: !stock.isPinned }
+          : stock
+      )
+    );
+  };
 
-  const pinnedStocks = stocks.filter(stock => stock.isPinned)
+  const pinnedStocks = stocks.filter((stock) => stock.isPinned);
 
   return (
     <Sidebar className="w-[280px] h-full border-l" collapsible="none">
@@ -92,9 +94,8 @@ export function MarketSidebar() {
               <SelectValue placeholder="Market" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="us">US Market</SelectItem>
-              <SelectItem value="eu">EU Market</SelectItem>
-              <SelectItem value="asia">Asia Market</SelectItem>
+              <SelectItem value="us">NYSE</SelectItem>
+              <SelectItem value="cr">Crypto</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -124,7 +125,9 @@ export function MarketSidebar() {
                         )}
                       </Button>
                     </div>
-                    <div className="text-xs text-muted-foreground truncate">{stock.name}</div>
+                    <div className="text-xs text-muted-foreground truncate">
+                      {stock.name}
+                    </div>
                   </div>
                   <div className="text-right">
                     <div className="font-medium">${stock.price}</div>
@@ -138,7 +141,8 @@ export function MarketSidebar() {
                       ) : (
                         <ArrowDown className="h-3 w-3" />
                       )}
-                      {Math.abs(stock.change)} ({Math.abs(stock.changePercent)}%)
+                      {Math.abs(stock.change)} ({Math.abs(stock.changePercent)}
+                      %)
                     </div>
                   </div>
                 </div>
@@ -148,6 +152,5 @@ export function MarketSidebar() {
         </SidebarGroup>
       </SidebarContent>
     </Sidebar>
-  )
+  );
 }
-

@@ -4,7 +4,7 @@ import { FinancialFeed } from "@/components/financial-feed";
 export default function Page() {
   return (
     <div className="h-full">
-      <main className="w-full min-w-max mx-auto px-4 py-6">
+      <main className="w-full px-4 py-6">
         <div className="space-y-6">
           <CreatePost />
           <FinancialFeed />

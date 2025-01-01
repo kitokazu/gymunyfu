@@ -60,13 +60,13 @@ export function MainSidebar() {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <button className="w-full">
+                  <a href="/profile">
                     <Avatar className="h-4 w-4">
                       <AvatarImage src="/placeholder.svg?height=32&width=32" />
                       <AvatarFallback>U</AvatarFallback>
                     </Avatar>
                     <span>Profile</span>
-                  </button>
+                  </a>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>

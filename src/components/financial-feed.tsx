@@ -11,7 +11,7 @@ export function FinancialFeed() {
         handle: "@tlam",
       },
       content:
-        "Just bought a house in Alabama. #RealEstate #Investing #RetireEarly #Accounting #PWC #Crypto",
+        "Just bought a house in Alabama. #RealEstate #Investing #RetireEarly #Accounting #PWC #Crypto hjk jk hj hj hj k ghj gh ",
       timestamp: "2h ago",
       likes: 245,
       comments: [
