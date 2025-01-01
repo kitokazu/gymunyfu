@@ -26,7 +26,7 @@ export default function RootLayout({
       <body
         className={`${inter.className} h-[100vh] w-[100vw] overflow-hidden`}
       >
-        <SidebarProvider>
+        {/* <SidebarProvider>
           <div className="h-[100vh] w-[100vw] flex justify-center">
             <div className="w-full flex">
               <MainSidebar />
@@ -40,7 +40,7 @@ export default function RootLayout({
                       </h1>
                     </div>
                   </header>
-                  <div className="flex-1 overflow-auto">{children}</div>
+                
                 </SidebarInset>
               </div>
               <div className="hidden lg:block h-full ml-10">
@@ -48,7 +48,8 @@ export default function RootLayout({
               </div>
             </div>
           </div>
-        </SidebarProvider>
+        </SidebarProvider> */}
+        <div className="flex-1 overflow-auto">{children}</div>
       </body>
     </html>
   );
