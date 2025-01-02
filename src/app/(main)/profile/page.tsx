@@ -1,6 +1,3 @@
-import { CreatePost } from "@/components/create-post";
-import { FinancialFeed } from "@/components/financial-feed";
-
 export default function Page() {
   return (
     <div className="h-full">
