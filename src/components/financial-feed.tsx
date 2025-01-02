@@ -1,11 +1,12 @@
 import { FinancialPost } from "@/components/financial-post";
+import { PostType } from "@/components/financial-post";
 
 export function FinancialFeed() {
   // This would typically fetch from your database
   const posts = [
     {
       id: 1,
-      type: "Analysis",
+      type: "Analysis" as PostType,
       author: {
         name: "Tyler Lamy",
         image: "/placeholder.svg?height=40&width=40",
@@ -42,7 +43,7 @@ export function FinancialFeed() {
     },
     {
       id: 2,
-      type: "News",
+      type: "News" as PostType,
       author: {
         name: "Theo Hughes",
         image: "/placeholder.svg?height=40&width=40",

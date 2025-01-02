@@ -1,32 +1,31 @@
 "use client";
 
 import {
-  Home,
-  Users,
-  BookMarked,
-  Settings,
-  ArrowBigLeft,
-  UserRound,
-} from "lucide-react";
-import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarGroup,
-  SidebarGroupContent,
 } from "@/components/ui/sidebar";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { usePathname } from "next/navigation";
+import {
+  ArrowBigLeft,
+  BookMarked,
+  Home,
+  Settings,
+  UserRound,
+  Users,
+} from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export function MainSidebar() {
   const pathname = usePathname();
 
-  const isCurrentPath = (path) => {
+  const isCurrentPath = (path: string) => {
     return pathname === path;
   };
 

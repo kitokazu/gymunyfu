@@ -1,13 +1,12 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "../globals.css";
 import { MainSidebar } from "@/components/main-sidebar";
 import { MarketSidebar } from "@/components/market-sidebar";
 import {
-  SidebarProvider,
   SidebarInset,
+  SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import type { Metadata } from "next";
+import "../globals.css";
 
 export const metadata: Metadata = {
   title: "GYMUNYFU",

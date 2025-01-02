@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { Comment } from "@/components/comment";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Comment } from "@/components/comment";
 import { MessageCircle } from "lucide-react";
+import { useState } from "react";
 
 interface CommentSectionProps {
   postId: number;
@@ -20,7 +20,7 @@ interface CommentSectionProps {
   }>;
 }
 
-export function CommentSection({ postId, comments }: CommentSectionProps) {
+export function CommentSection({ comments }: CommentSectionProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [newComment, setNewComment] = useState("");
 

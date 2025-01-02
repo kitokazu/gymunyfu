@@ -13,7 +13,7 @@ import { BookmarkIcon, Heart, MessageCircle, Share2 } from "lucide-react";
 import { CommentSection } from "./comment-section";
 import { cn } from "@/lib/utils";
 
-type PostType = "Analysis" | "News" | "Discussion" | "Strategy";
+export type PostType = "Analysis" | "News" | "Discussion" | "Strategy";
 
 const postTypeStyles: Record<PostType, { color: string; bgColor: string }> = {
   Analysis: {
