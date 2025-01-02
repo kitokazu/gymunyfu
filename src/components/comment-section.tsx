@@ -1,35 +1,35 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Textarea } from "@/components/ui/textarea"
-import { Comment } from "@/components/comment"
-import { MessageCircle } from 'lucide-react'
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Comment } from "@/components/comment";
+import { MessageCircle } from "lucide-react";
 
 interface CommentSectionProps {
-  postId: number
+  postId: number;
   comments: Array<{
-    id: number
+    id: number;
     author: {
-      name: string
-      image: string
-    }
-    content: string
-    timestamp: Date
-    likes: number
-  }>
+      name: string;
+      image: string;
+    };
+    content: string;
+    timestamp: Date;
+    likes: number;
+  }>;
 }
 
 export function CommentSection({ postId, comments }: CommentSectionProps) {
-  const [isExpanded, setIsExpanded] = useState(false)
-  const [newComment, setNewComment] = useState("")
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [newComment, setNewComment] = useState("");
 
   const handleSubmitComment = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     // Here you would typically send the comment to your backend
-    console.log("New comment:", newComment)
-    setNewComment("")
-  }
+    console.log("New comment:", newComment);
+    setNewComment("");
+  };
 
   if (!isExpanded) {
     return (
@@ -45,22 +45,23 @@ export function CommentSection({ postId, comments }: CommentSectionProps) {
           <span>Add a comment</span>
         )}
       </Button>
-    )
+    );
   }
 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-medium">Comments ({comments.length})</h3>
-        <Button
-          variant="ghost"
-          size="sm"
+        <h3
+          className="text-sm font-medium cursor-pointer"
           onClick={() => setIsExpanded(false)}
         >
+          Comments ({comments.length})
+        </h3>
+        <Button variant="ghost" size="sm" onClick={() => setIsExpanded(false)}>
           Hide
         </Button>
       </div>
-      
+
       <form onSubmit={handleSubmitComment} className="space-y-2">
         <Textarea
           placeholder="Add a comment..."
@@ -69,11 +70,7 @@ export function CommentSection({ postId, comments }: CommentSectionProps) {
           className="min-h-[80px]"
         />
         <div className="flex justify-end">
-          <Button 
-            type="submit"
-            size="sm"
-            disabled={!newComment.trim()}
-          >
+          <Button type="submit" size="sm" disabled={!newComment.trim()}>
             Post
           </Button>
         </div>
@@ -85,6 +82,5 @@ export function CommentSection({ postId, comments }: CommentSectionProps) {
         ))}
       </div>
     </div>
-  )
+  );
 }
-

@@ -5,6 +5,7 @@ export function FinancialFeed() {
   const posts = [
     {
       id: 1,
+      type: "Analysis",
       author: {
         name: "Tyler Lamy",
         image: "/placeholder.svg?height=40&width=40",
@@ -37,9 +38,11 @@ export function FinancialFeed() {
         },
       ],
       shares: 12,
+      saved: true,
     },
     {
       id: 2,
+      type: "News",
       author: {
         name: "Theo Hughes",
         image: "/placeholder.svg?height=40&width=40",
