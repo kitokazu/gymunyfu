@@ -21,12 +21,19 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export function MainSidebar() {
   const pathname = usePathname();
+  const router = useRouter();
 
   const isCurrentPath = (path: string) => {
     return pathname === path;
+  };
+
+  const signOutHandler = () => {
+    signOut();
   };
 
   return (
@@ -91,7 +98,7 @@ export function MainSidebar() {
               <SidebarMenuItem>
                 <SidebarMenuButton>
                   <ArrowBigLeft className="h-4 w-4" />
-                  <span>Sign Out</span>
+                  <span onClick={() => signOut()}>Sign Out</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>

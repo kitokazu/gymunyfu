@@ -7,17 +7,23 @@ import {
 } from "@/components/ui/sidebar";
 import type { Metadata } from "next";
 import "../globals.css";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "GYMUNYFU",
   description: "A social platform for finance enthusiasts",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await auth();
+  if (!session) {
+    redirect("/");
+  }
   return (
     <SidebarProvider>
       <div className="h-[100vh] w-[100vw] flex justify-center">
