@@ -1,9 +1,11 @@
-export default function Page() {
+import { ProfileHeader } from "@/components/profile-header";
+import { ProfileTabs } from "@/components/profile-tabs";
+
+export default function ProfilePage() {
   return (
-    <div className="h-full">
-      <main className="w-full px-4 py-6">
-        <div className="space-y-6">Profile</div>
-      </main>
+    <div className="container max-w-4xl mx-auto p-6 space-y-8">
+      <ProfileHeader />
+      <ProfileTabs />
     </div>
   );
 }

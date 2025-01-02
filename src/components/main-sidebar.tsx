@@ -22,18 +22,12 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
-import { useRouter } from "next/navigation";
 
 export function MainSidebar() {
   const pathname = usePathname();
-  const router = useRouter();
 
   const isCurrentPath = (path: string) => {
     return pathname === path;
-  };
-
-  const signOutHandler = () => {
-    signOut();
   };
 
   return (
