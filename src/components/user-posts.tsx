@@ -1,7 +1,7 @@
 import { FinancialPost } from "@/components/financial-post";
 import { PostType } from "@/components/financial-post";
 
-export function FinancialFeed() {
+export function UserPosts() {
   const posts = [
     {
       id: 1,
@@ -39,32 +39,6 @@ export function FinancialFeed() {
       ],
       shares: 12,
       saved: true,
-    },
-    {
-      id: 2,
-      type: "News" as PostType,
-      author: {
-        name: "Theo Hughes",
-        image: "/placeholder.svg?height=40&width=40",
-        handle: "@thughes",
-      },
-      content:
-        "My dad just published a book and it was really good. 🪙 #Retire #Investment",
-      timestamp: "4h ago",
-      likes: 189,
-      comments: [
-        {
-          id: 3,
-          author: {
-            name: "Kai Itokazu",
-            image: "/placeholder.svg?height=32&width=32",
-          },
-          content: "Thanks to the book I am now in debt!",
-          timestamp: new Date(Date.now() - 7200000), // 2 hours ago
-          likes: 15,
-        },
-      ],
-      shares: 8,
     },
   ];
 
