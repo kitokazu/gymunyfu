@@ -1,6 +1,12 @@
-import { signIn } from "@/auth";
+import { auth, signIn } from "@/auth";
+import { redirect } from "next/navigation";
 
-export default function Page() {
+export default async function Page() {
+  const session = await auth();
+  if (session) {
+    redirect("/home");
+  }
+
   return (
     <div className="h-full">
       <main className="w-full px-4 py-6">
