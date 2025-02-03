@@ -21,14 +21,19 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { signOut } from "next-auth/react";
+import { useAuth, useUser, useClerk } from "@clerk/nextjs";
 
 export function MainSidebar() {
   const pathname = usePathname();
+  const { isLoaded, isSignedIn, userId, sessionId, getToken } = useAuth();
+  const { user } = useUser();
+  const { signOut } = useClerk();
 
   const isCurrentPath = (path: string) => {
     return pathname === path;
   };
+
+  console.log(user);
 
   return (
     <Sidebar className="w-[200px] h-full border-r">
@@ -79,7 +84,7 @@ export function MainSidebar() {
                 <SidebarMenuButton isActive={isCurrentPath("/profile")}>
                   <Link href="/profile" className="flex items-center gap-2">
                     <UserRound className="h-4 w-4" />
-                    <span>Profile</span>
+                    <span>Username</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -92,7 +97,9 @@ export function MainSidebar() {
               <SidebarMenuItem>
                 <SidebarMenuButton>
                   <ArrowBigLeft className="h-4 w-4" />
-                  <span onClick={() => signOut()}>Sign Out</span>
+                  <span onClick={() => signOut({ redirectUrl: "/" })}>
+                    Sign Out
+                  </span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>

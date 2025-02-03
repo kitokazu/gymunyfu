@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/sidebar";
 import type { Metadata } from "next";
 import "../globals.css";
-import { auth } from "@/auth";
+import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {

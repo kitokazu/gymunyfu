@@ -1,16 +1,16 @@
+"use client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Settings } from "lucide-react";
-import { auth } from "@/auth";
+import { useAuth, useUser } from "@clerk/nextjs";
 
-export async function ProfileHeader() {
-  const session = await auth();
-  const user = session?.user;
+export function ProfileHeader() {
+  const { isLoaded, isSignedIn, user } = useUser();
   console.log({ user });
-  const name = user?.name;
+  const firstLetter = user?.fullName[0];
+  const name = user?.fullName;
   const email = user?.email;
-  const firstLetter = name?.charAt(0);
 
   return (
     <div className="flex flex-col gap-6">
@@ -22,7 +22,6 @@ export async function ProfileHeader() {
           </Avatar>
           <div>
             <h1 className="text-2xl font-bold">{name}</h1>
-            <p className="text-muted-foreground">{email}</p>
             <div className="flex gap-2 mt-2">
               <Badge variant="secondary">Investor</Badge>
               <Badge variant="secondary">Accountant</Badge>
