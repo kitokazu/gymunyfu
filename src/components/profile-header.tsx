@@ -3,21 +3,20 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Settings } from "lucide-react";
-import { useAuth, useUser } from "@clerk/nextjs";
+import { useUser } from "@clerk/nextjs";
 
 export function ProfileHeader() {
-  const { isLoaded, isSignedIn, user } = useUser();
-  console.log({ user });
-  const firstLetter = user?.fullName[0];
+  const { user } = useUser();
+
   const name = user?.fullName;
-  const email = user?.email;
+  const firstLetter = user?.firstName?.[0] ?? "";
 
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-start justify-between">
         <div className="flex gap-4">
           <Avatar className="h-20 w-20">
-            <AvatarImage src="/placeholder.svg?height=80&width=80" alt="User" />
+            <AvatarImage src="" alt="User" />
             <AvatarFallback>{firstLetter}</AvatarFallback>
           </Avatar>
           <div>

@@ -8,7 +8,7 @@ export function FinancialFeed() {
       type: "Analysis" as PostType,
       author: {
         name: "Tyler Lamy",
-        image: "/placeholder.svg?height=40&width=40",
+        image: "",
         handle: "@tlam",
       },
       content:
@@ -20,7 +20,7 @@ export function FinancialFeed() {
           id: 1,
           author: {
             name: "Ory Ratoviz",
-            image: "/placeholder.svg?height=32&width=32",
+            image: "",
           },
           content: "This is great but can you please pay my rent?",
           timestamp: new Date(Date.now() - 3600000), // 1 hour ago
@@ -30,7 +30,7 @@ export function FinancialFeed() {
           id: 2,
           author: {
             name: "Sora Sato",
-            image: "/placeholder.svg?height=32&width=32",
+            image: "",
           },
           content: "Did you hear about Kai and his gf",
           timestamp: new Date(Date.now() - 1800000), // 30 minutes ago
@@ -45,7 +45,7 @@ export function FinancialFeed() {
       type: "News" as PostType,
       author: {
         name: "Theo Hughes",
-        image: "/placeholder.svg?height=40&width=40",
+        image: "",
         handle: "@thughes",
       },
       content:
@@ -57,7 +57,7 @@ export function FinancialFeed() {
           id: 3,
           author: {
             name: "Kai Itokazu",
-            image: "/placeholder.svg?height=32&width=32",
+            image: "",
           },
           content: "Thanks to the book I am now in debt!",
           timestamp: new Date(Date.now() - 7200000), // 2 hours ago

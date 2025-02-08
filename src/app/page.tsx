@@ -17,8 +17,8 @@ export default async function Page() {
   }
 
   // Get the Backend API User object when you need access to the user's information
-  const user = await currentUser();
-  console.log({ user });
+  // const user = await currentUser();
+  // console.log({ user });
 
   return (
     <div className="h-full">
