@@ -38,3 +38,16 @@ export async function syncUser() {
     console.error("Error in sync user", error);
   }
 }
+
+export async function getUserById(clerkId: string) {
+  return await prisma.user.findUnique({
+    where: {
+      clerkId,
+    },
+    include: {
+      _count: {
+        select: { followers: true, following: true, posts: true },
+      },
+    },
+  });
+}

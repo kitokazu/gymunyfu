@@ -1,15 +1,17 @@
-"use client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Settings } from "lucide-react";
-import { useUser } from "@clerk/nextjs";
+import { currentUser } from "@clerk/nextjs/server";
+import { getUserById } from "@/actions/user.action";
 
-export function ProfileHeader() {
-  const { user } = useUser();
+export async function ProfileHeader() {
+  const authUser = await currentUser();
+  if (!authUser) return null;
+  const user = await getUserById(authUser.id);
+  const name = user?.name ?? "User";
 
-  const name = user?.fullName;
-  const firstLetter = user?.firstName?.[0] ?? "";
+  console.log(user);
 
   return (
     <div className="flex flex-col gap-6">
@@ -17,7 +19,7 @@ export function ProfileHeader() {
         <div className="flex gap-4">
           <Avatar className="h-20 w-20">
             <AvatarImage src="" alt="User" />
-            <AvatarFallback>{firstLetter}</AvatarFallback>
+            <AvatarFallback>{name[0]}</AvatarFallback>
           </Avatar>
           <div>
             <h1 className="text-2xl font-bold">{name}</h1>
@@ -33,15 +35,15 @@ export function ProfileHeader() {
       </div>
       <div className="flex gap-6 text-sm">
         <div>
-          <span className="font-medium">2</span>{" "}
+          <span className="font-medium">{user?._count.posts}</span>{" "}
           <span className="text-muted-foreground">posts</span>
         </div>
         <div>
-          <span className="font-medium">2</span>{" "}
+          <span className="font-medium">{user?._count.followers}</span>{" "}
           <span className="text-muted-foreground">followers</span>
         </div>
         <div>
-          <span className="font-medium">3</span>{" "}
+          <span className="font-medium">{user?._count.following}</span>{" "}
           <span className="text-muted-foreground">following</span>
         </div>
       </div>

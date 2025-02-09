@@ -9,14 +9,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import {
-  ArrowBigLeft,
-  BookMarked,
-  Home,
-  Settings,
-  UserRound,
-  Users,
-} from "lucide-react";
+import { ArrowBigLeft, BookMarked, Home, UserRound, Users } from "lucide-react";
 import SignOutButton from "@/components/signout-button";
 import Link from "next/link";
 import { currentUser } from "@clerk/nextjs/server";
@@ -74,14 +67,8 @@ export async function MainSidebar() {
                 <SidebarMenuButton>
                   <Link href="/profile" className="flex items-center gap-2">
                     <UserRound className="h-4 w-4" />
-                    <span>{user?.firstName}</span>
+                    <span>Profile</span>
                   </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton>
-                  <Settings className="h-4 w-4" />
-                  <span>Light Mode</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>

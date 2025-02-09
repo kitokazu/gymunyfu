@@ -26,7 +26,7 @@ export default async function RootLayout({
     redirect("/");
   }
   const user = await currentUser();
-  if (user) await syncUser();
+  if (user) await syncUser(); // POST
 
   return (
     <SidebarProvider>
