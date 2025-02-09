@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Sidebar,
   SidebarContent,
@@ -11,24 +9,14 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import {
-  ArrowBigLeft,
-  BookMarked,
-  Home,
-  Settings,
-  UserRound,
-  Users,
-} from "lucide-react";
+import { ArrowBigLeft, BookMarked, Home, UserRound, Users } from "lucide-react";
+import SignOutButton from "@/components/signout-button";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { signOut } from "next-auth/react";
+import { currentUser } from "@clerk/nextjs/server";
 
-export function MainSidebar() {
-  const pathname = usePathname();
-
-  const isCurrentPath = (path: string) => {
-    return pathname === path;
-  };
+export async function MainSidebar() {
+  const user = await currentUser();
+  console.log(user);
 
   return (
     <Sidebar className="w-[200px] h-full border-r">
@@ -44,7 +32,7 @@ export function MainSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton isActive={isCurrentPath("/home")}>
+                <SidebarMenuButton>
                   <Link href="/home" className="flex items-center gap-2">
                     <Home className="h-4 w-4" />
                     <span>Home</span>
@@ -52,7 +40,7 @@ export function MainSidebar() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton isActive={isCurrentPath("/network")}>
+                <SidebarMenuButton>
                   <Link href="/network" className="flex items-center gap-2">
                     <Users className="h-4 w-4" />
                     <span>Network</span>
@@ -60,7 +48,7 @@ export function MainSidebar() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton isActive={isCurrentPath("/bookmarks")}>
+                <SidebarMenuButton>
                   <Link href="/bookmarks" className="flex items-center gap-2">
                     <BookMarked className="h-4 w-4" />
                     <span>Bookmarks</span>
@@ -76,7 +64,7 @@ export function MainSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton isActive={isCurrentPath("/profile")}>
+                <SidebarMenuButton>
                   <Link href="/profile" className="flex items-center gap-2">
                     <UserRound className="h-4 w-4" />
                     <span>Profile</span>
@@ -85,14 +73,8 @@ export function MainSidebar() {
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton>
-                  <Settings className="h-4 w-4" />
-                  <span>Light Mode</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton>
                   <ArrowBigLeft className="h-4 w-4" />
-                  <span onClick={() => signOut()}>Sign Out</span>
+                  <SignOutButton />
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>

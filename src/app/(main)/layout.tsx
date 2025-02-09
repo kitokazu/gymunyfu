@@ -7,8 +7,9 @@ import {
 } from "@/components/ui/sidebar";
 import type { Metadata } from "next";
 import "../globals.css";
-import { auth } from "@/auth";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import { syncUser } from "@/actions/user.action";
 
 export const metadata: Metadata = {
   title: "GYMUNYFU",
@@ -24,6 +25,9 @@ export default async function RootLayout({
   if (!session) {
     redirect("/");
   }
+  const user = await currentUser();
+  if (user) await syncUser(); // POST request
+
   return (
     <SidebarProvider>
       <div className="h-[100vh] w-[100vw] flex justify-center">

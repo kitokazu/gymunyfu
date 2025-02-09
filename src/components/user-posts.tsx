@@ -8,7 +8,7 @@ export function UserPosts() {
       type: "Analysis" as PostType,
       author: {
         name: "Tyler Lamy",
-        image: "/placeholder.svg?height=40&width=40",
+        image: "",
         handle: "@tlam",
       },
       content:
@@ -20,7 +20,7 @@ export function UserPosts() {
           id: 1,
           author: {
             name: "Ory Ratoviz",
-            image: "/placeholder.svg?height=32&width=32",
+            image: "",
           },
           content: "This is great but can you please pay my rent?",
           timestamp: new Date(Date.now() - 3600000), // 1 hour ago
@@ -30,7 +30,7 @@ export function UserPosts() {
           id: 2,
           author: {
             name: "Sora Sato",
-            image: "/placeholder.svg?height=32&width=32",
+            image: "",
           },
           content: "Did you hear about Kai and his gf",
           timestamp: new Date(Date.now() - 1800000), // 30 minutes ago
