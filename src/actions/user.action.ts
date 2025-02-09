@@ -18,6 +18,8 @@ export async function syncUser() {
       },
     });
 
+    console.log("Existing user", existingUser);
+
     if (existingUser) {
       return existingUser;
     }
