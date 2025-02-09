@@ -3,17 +3,17 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Settings } from "lucide-react";
 import { currentUser } from "@clerk/nextjs/server";
-// import { getUserById } from "@/actions/user.action";
+import { getUserById } from "@/actions/user.action";
 
 export async function ProfileHeader() {
   const authUser = await currentUser();
   if (!authUser) return null;
-  // const user = await getUserById(authUser.id);
-  // const name = user?.name ?? "User";
+  const user = await getUserById(authUser.id);
+  const name = user?.name ?? "User";
 
-  const name = "User";
+  // const name = "User";
 
-  // console.log(user);
+  console.log(user);
 
   return (
     <div className="flex flex-col gap-6">
