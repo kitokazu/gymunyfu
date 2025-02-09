@@ -3,15 +3,17 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Settings } from "lucide-react";
 import { currentUser } from "@clerk/nextjs/server";
-import { getUserById } from "@/actions/user.action";
+// import { getUserById } from "@/actions/user.action";
 
 export async function ProfileHeader() {
   const authUser = await currentUser();
   if (!authUser) return null;
-  const user = await getUserById(authUser.id);
-  const name = user?.name ?? "User";
+  // const user = await getUserById(authUser.id);
+  // const name = user?.name ?? "User";
 
-  console.log(user);
+  const name = "User";
+
+  // console.log(user);
 
   return (
     <div className="flex flex-col gap-6">
@@ -35,15 +37,15 @@ export async function ProfileHeader() {
       </div>
       <div className="flex gap-6 text-sm">
         <div>
-          <span className="font-medium">{user?._count.posts}</span>{" "}
+          <span className="font-medium">Posts</span>{" "}
           <span className="text-muted-foreground">posts</span>
         </div>
         <div>
-          <span className="font-medium">{user?._count.followers}</span>{" "}
+          <span className="font-medium">Followers</span>{" "}
           <span className="text-muted-foreground">followers</span>
         </div>
         <div>
-          <span className="font-medium">{user?._count.following}</span>{" "}
+          <span className="font-medium">Following</span>{" "}
           <span className="text-muted-foreground">following</span>
         </div>
       </div>
