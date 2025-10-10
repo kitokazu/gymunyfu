@@ -217,9 +217,9 @@ export function EditableFinancialOverview({
         currentProfile.incomeBreakdown &&
         currentProfile.incomeBreakdown.length > 0 && (
           <Card>
-            <CardHeader>
+            <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
-                <CardTitle className="flex items-center gap-2">
+                <CardTitle className="flex items-center gap-1">
                   <DollarSign className="h-5 w-5 text-primary" />
                   Income Breakdown
                 </CardTitle>
@@ -235,16 +235,16 @@ export function EditableFinancialOverview({
                 )}
               </div>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <p className="text-sm font-medium">Income Sources</p>
-                  {editingSection === "income" && (
+            <CardContent className="space-y-3 pt-0">
+              <div className="space-y-2">
+                {editingSection === "income" && (
+                  <div className="flex justify-end">
                     <Button variant="ghost" size="sm" onClick={addIncomeSource}>
-                      <Plus className="h-4 w-4" />
+                      <Plus className="h-4 w-4 mr-1" />
+                      Add Income Source
                     </Button>
-                  )}
-                </div>
+                  </div>
+                )}
                 {currentProfile.incomeBreakdown.map((source, index) => {
                   const percentage = currentProfile.totalIncome
                     ? (source.amount / currentProfile.totalIncome) * 100
@@ -776,216 +776,206 @@ export function EditableFinancialOverview({
               </CardContent>
             </Card>
           )}
-
-          {/* Loans */}
-          {(profile.showLoans ?? true) && (
-            <Card className="md:col-span-2">
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <CardTitle className="flex items-center gap-2 text-base">
-                    <FileText className="h-4 w-4 text-primary" />
-                    Loans
-                  </CardTitle>
-                  {isOwnProfile && editingSection !== "loans" && (
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8"
-                      onClick={() => handleEdit("loans")}
-                    >
-                      <Pencil className="h-4 w-4" />
-                    </Button>
-                  )}
-                </div>
-              </CardHeader>
-              <CardContent>
-                {currentProfile.loans && currentProfile.loans.length > 0 ? (
-                  <>
-                    <div className="grid gap-3 sm:grid-cols-2">
-                      {currentProfile.loans.map((loan, index) => (
-                        <div
-                          key={loan.id}
-                          className="flex items-start gap-2 rounded-lg border border-border p-3"
-                        >
-                          {editingSection === "loans" && (
-                            <div className="flex flex-col gap-1 pt-1">
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-6 w-6"
-                                onClick={() =>
-                                  setTempProfile({
-                                    ...tempProfile,
-                                    loans: moveItem(
-                                      tempProfile.loans!,
-                                      index,
-                                      "up"
-                                    ),
-                                  })
-                                }
-                                disabled={index === 0}
-                              >
-                                <GripVertical className="h-3 w-3" />
-                              </Button>
-                            </div>
-                          )}
-                          <div className="flex-1">
-                            {editingSection === "loans" ? (
-                              <div className="space-y-2">
-                                <Input
-                                  value={loan.name}
-                                  onChange={(e) => {
-                                    const updated = [
-                                      ...(tempProfile.loans || []),
-                                    ];
-                                    updated[index] = {
-                                      ...updated[index],
-                                      name: e.target.value,
-                                    };
-                                    setTempProfile({
-                                      ...tempProfile,
-                                      loans: updated,
-                                    });
-                                  }}
-                                  placeholder="Loan name"
-                                />
-                                <Select
-                                  value={loan.type}
-                                  onValueChange={(
-                                    value:
-                                      | "student"
-                                      | "mortgage"
-                                      | "auto"
-                                      | "personal"
-                                      | "business"
-                                      | "other"
-                                  ) => {
-                                    const updated = [
-                                      ...(tempProfile.loans || []),
-                                    ];
-                                    updated[index] = {
-                                      ...updated[index],
-                                      type: value,
-                                    };
-                                    setTempProfile({
-                                      ...tempProfile,
-                                      loans: updated,
-                                    });
-                                  }}
-                                >
-                                  <SelectTrigger>
-                                    <SelectValue />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    <SelectItem value="student">
-                                      Student Loan
-                                    </SelectItem>
-                                    <SelectItem value="mortgage">
-                                      Mortgage
-                                    </SelectItem>
-                                    <SelectItem value="auto">
-                                      Auto Loan
-                                    </SelectItem>
-                                    <SelectItem value="personal">
-                                      Personal Loan
-                                    </SelectItem>
-                                    <SelectItem value="business">
-                                      Business Loan
-                                    </SelectItem>
-                                    <SelectItem value="other">Other</SelectItem>
-                                  </SelectContent>
-                                </Select>
-                                <Input
-                                  value={loan.lender || ""}
-                                  onChange={(e) => {
-                                    const updated = [
-                                      ...(tempProfile.loans || []),
-                                    ];
-                                    updated[index] = {
-                                      ...updated[index],
-                                      lender: e.target.value,
-                                    };
-                                    setTempProfile({
-                                      ...tempProfile,
-                                      loans: updated,
-                                    });
-                                  }}
-                                  placeholder="Lender (optional)"
-                                />
-                              </div>
-                            ) : (
-                              <>
-                                <p className="text-sm font-medium text-foreground">
-                                  {loan.name}
-                                </p>
-                                <div className="flex items-center gap-2 mt-1">
-                                  <p className="text-xs text-muted-foreground capitalize">
-                                    {loan.type.replace("-", " ")}
-                                  </p>
-                                  {loan.lender && (
-                                    <>
-                                      <span className="text-xs text-muted-foreground">
-                                        •
-                                      </span>
-                                      <p className="text-xs text-muted-foreground">
-                                        {loan.lender}
-                                      </p>
-                                    </>
-                                  )}
-                                </div>
-                              </>
-                            )}
-                          </div>
-                          {editingSection === "loans" && (
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-8 w-8 text-destructive"
-                              onClick={() => removeLoan(loan.id)}
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                    {editingSection === "loans" && (
-                      <>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="w-full mt-3 bg-transparent"
-                          onClick={addLoan}
-                        >
-                          <Plus className="h-4 w-4 mr-2" />
-                          Add Loan
-                        </Button>
-                        <div className="flex justify-end gap-2 pt-2 border-t mt-3">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={handleCancel}
-                          >
-                            <X className="h-4 w-4 mr-1.5" />
-                            Cancel
-                          </Button>
-                          <Button size="sm" onClick={handleSave}>
-                            <Save className="h-4 w-4 mr-1.5" />
-                            Save
-                          </Button>
-                        </div>
-                      </>
-                    )}
-                  </>
-                ) : (
-                  <p className="text-sm text-muted-foreground">
-                    No loans added
-                  </p>
-                )}
-              </CardContent>
-            </Card>
-          )}
         </div>
+      )}
+
+      {/* Loans */}
+      {(profile.showLoans ?? true) && (
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle className="flex items-center gap-2 text-base">
+                <FileText className="h-4 w-4 text-primary" />
+                Loans
+              </CardTitle>
+              {isOwnProfile && editingSection !== "loans" && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8"
+                  onClick={() => handleEdit("loans")}
+                >
+                  <Pencil className="h-4 w-4" />
+                </Button>
+              )}
+            </div>
+          </CardHeader>
+          <CardContent>
+            {currentProfile.loans && currentProfile.loans.length > 0 ? (
+              <>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {currentProfile.loans.map((loan, index) => (
+                    <div
+                      key={loan.id}
+                      className="flex items-start gap-2 rounded-lg border border-border p-3"
+                    >
+                      {editingSection === "loans" && (
+                        <div className="flex flex-col gap-1 pt-1">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-6 w-6"
+                            onClick={() =>
+                              setTempProfile({
+                                ...tempProfile,
+                                loans: moveItem(
+                                  tempProfile.loans!,
+                                  index,
+                                  "up"
+                                ),
+                              })
+                            }
+                            disabled={index === 0}
+                          >
+                            <GripVertical className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      )}
+                      <div className="flex-1">
+                        {editingSection === "loans" ? (
+                          <div className="space-y-2">
+                            <Input
+                              value={loan.name}
+                              onChange={(e) => {
+                                const updated = [...(tempProfile.loans || [])];
+                                updated[index] = {
+                                  ...updated[index],
+                                  name: e.target.value,
+                                };
+                                setTempProfile({
+                                  ...tempProfile,
+                                  loans: updated,
+                                });
+                              }}
+                              placeholder="Loan name"
+                            />
+                            <Select
+                              value={loan.type}
+                              onValueChange={(
+                                value:
+                                  | "student"
+                                  | "mortgage"
+                                  | "auto"
+                                  | "personal"
+                                  | "business"
+                                  | "other"
+                              ) => {
+                                const updated = [...(tempProfile.loans || [])];
+                                updated[index] = {
+                                  ...updated[index],
+                                  type: value,
+                                };
+                                setTempProfile({
+                                  ...tempProfile,
+                                  loans: updated,
+                                });
+                              }}
+                            >
+                              <SelectTrigger>
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="student">
+                                  Student Loan
+                                </SelectItem>
+                                <SelectItem value="mortgage">
+                                  Mortgage
+                                </SelectItem>
+                                <SelectItem value="auto">Auto Loan</SelectItem>
+                                <SelectItem value="personal">
+                                  Personal Loan
+                                </SelectItem>
+                                <SelectItem value="business">
+                                  Business Loan
+                                </SelectItem>
+                                <SelectItem value="other">Other</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <Input
+                              value={loan.lender || ""}
+                              onChange={(e) => {
+                                const updated = [...(tempProfile.loans || [])];
+                                updated[index] = {
+                                  ...updated[index],
+                                  lender: e.target.value,
+                                };
+                                setTempProfile({
+                                  ...tempProfile,
+                                  loans: updated,
+                                });
+                              }}
+                              placeholder="Lender (optional)"
+                            />
+                          </div>
+                        ) : (
+                          <>
+                            <p className="text-sm font-medium text-foreground">
+                              {loan.name}
+                            </p>
+                            <div className="flex items-center gap-2 mt-1">
+                              <p className="text-xs text-muted-foreground capitalize">
+                                {loan.type.replace("-", " ")}
+                              </p>
+                              {loan.lender && (
+                                <>
+                                  <span className="text-xs text-muted-foreground">
+                                    •
+                                  </span>
+                                  <p className="text-xs text-muted-foreground">
+                                    {loan.lender}
+                                  </p>
+                                </>
+                              )}
+                            </div>
+                          </>
+                        )}
+                      </div>
+                      {editingSection === "loans" && (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 text-destructive"
+                          onClick={() => removeLoan(loan.id)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                {editingSection === "loans" && (
+                  <>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full mt-3 bg-transparent"
+                      onClick={addLoan}
+                    >
+                      <Plus className="h-4 w-4 mr-2" />
+                      Add Loan
+                    </Button>
+                    <div className="flex justify-end gap-2 pt-2 border-t mt-3">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleCancel}
+                      >
+                        <X className="h-4 w-4 mr-1.5" />
+                        Cancel
+                      </Button>
+                      <Button size="sm" onClick={handleSave}>
+                        <Save className="h-4 w-4 mr-1.5" />
+                        Save
+                      </Button>
+                    </div>
+                  </>
+                )}
+              </>
+            ) : (
+              <p className="text-sm text-muted-foreground">No loans added</p>
+            )}
+          </CardContent>
+        </Card>
       )}
     </div>
   );
