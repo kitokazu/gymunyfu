@@ -4,16 +4,23 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Home, PlusCircle, Users, User } from "lucide-react"
 import { cn } from "@/lib/utils"
-
-const navigation = [
-  { name: "Feed", href: "/", icon: Home },
-  { name: "Users", href: "/users", icon: Users },
-  { name: "Post", href: "/new-post", icon: PlusCircle },
-  { name: "Profile", href: "/profile/wealthbuilder", icon: User },
-]
+import { useCurrentUser } from "@/lib/hooks/use-current-user"
 
 export function MobileNav() {
   const pathname = usePathname()
+  const { user } = useCurrentUser()
+  const isAuthPage = ["/login", "/signup"].includes(pathname)
+
+  if (isAuthPage) {
+    return null
+  }
+
+  const navigation = [
+    { name: "Feed", href: "/", icon: Home },
+    { name: "Users", href: "/users", icon: Users },
+    { name: "Post", href: "/new-post", icon: PlusCircle },
+    { name: "Profile", href: user ? `/profile/${user.username}` : "/login", icon: User },
+  ]
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background lg:hidden">

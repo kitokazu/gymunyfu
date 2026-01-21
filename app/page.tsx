@@ -10,7 +10,7 @@ import { useState, useMemo } from "react"
 import { Pen, Loader2 } from "lucide-react"
 import { usePosts } from "@/lib/hooks/use-posts"
 import { useCurrentUser } from "@/lib/hooks/use-current-user"
-import { createPost } from "@/lib/services"
+import { createPost, deletePost } from "@/lib/services"
 
 export default function HomePage() {
   const { user: currentUser, loading: userLoading } = useCurrentUser()
@@ -63,6 +63,14 @@ export default function HomePage() {
     }
   }
 
+  const handleDeletePost = async (postId: string) => {
+    try {
+      await deletePost(postId)
+    } catch (error) {
+      console.error("Error deleting post:", error)
+    }
+  }
+
   const isLoading = userLoading || postsLoading
 
   return (
@@ -93,7 +101,15 @@ export default function HomePage() {
           ) : (
             <div className="space-y-4">
               {filteredPosts.length > 0 ? (
-                filteredPosts.map((post) => <PostCard key={post.id} post={post} onLike={likePost} />)
+                filteredPosts.map((post) => (
+                  <PostCard
+                    key={post.id}
+                    post={post}
+                    currentUserId={currentUser?.id}
+                    onLike={likePost}
+                    onDelete={handleDeletePost}
+                  />
+                ))
               ) : (
                 <div className="text-center py-12">
                   <p className="text-muted-foreground">No posts match your filters</p>

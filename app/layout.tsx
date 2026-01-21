@@ -8,6 +8,7 @@ import { Header } from "@/components/layout/header"
 import { Sidebar } from "@/components/layout/sidebar"
 import { MobileNav } from "@/components/layout/mobile-nav"
 import { Suspense } from "react"
+import { Providers } from "./providers"
 
 export const metadata: Metadata = {
   title: "gymunyfu - Get Your Money Up Not Your Funny Up",
@@ -24,15 +25,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Header />
-          <div className="flex min-h-[calc(100vh-4rem)]">
-            <Sidebar />
-            <main className="flex-1 pb-16 lg:pb-0">{children}</main>
-          </div>
-          <MobileNav />
-          <Analytics />
-        </Suspense>
+        <Providers>
+          <Suspense fallback={<div>Loading...</div>}>
+            <Header />
+            <div className="flex min-h-[calc(100vh-4rem)]">
+              <Sidebar />
+              <main className="flex-1 pb-16 lg:pb-0">{children}</main>
+            </div>
+            <MobileNav />
+            <Analytics />
+          </Suspense>
+        </Providers>
       </body>
     </html>
   )

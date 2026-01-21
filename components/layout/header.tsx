@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { Search, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,17 +20,29 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { mockUsers } from "@/lib/mock-data";
 import { TrendingUp, Home, Users, User, Settings } from "lucide-react";
 import { useState } from "react";
-import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { ProfileIconComponent } from "@/components/ui/profile-icon";
+import { useCurrentUser } from "@/lib/hooks/use-current-user";
+import { useAuth } from "@/lib/contexts/auth-context";
 
 export function Header() {
-  const currentUser = mockUsers[0];
+  const { user: currentUser } = useCurrentUser();
+  const { signOut } = useAuth();
+  const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
+
+  const isAuthPage = ["/login", "/signup"].includes(pathname);
+
+  if (isAuthPage) {
+    return null;
+  }
+
+  if (!currentUser) {
+    return null;
+  }
 
   const navigation = [
     { name: "Feed", href: "/", icon: Home },
@@ -37,6 +50,11 @@ export function Header() {
     { name: "Profile", href: `/profile/${currentUser.username}`, icon: User },
     { name: "Settings", href: "/settings", icon: Settings },
   ];
+
+  const handleSignOut = async () => {
+    await signOut();
+    router.replace("/login");
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -100,7 +118,7 @@ export function Header() {
                 <Link href="/settings">Settings</Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Sign out</DropdownMenuItem>
+              <DropdownMenuItem onClick={handleSignOut}>Sign out</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
 

@@ -9,6 +9,7 @@ import {
   Bookmark,
   MoreHorizontal,
   Loader2,
+  Trash2,
 } from "lucide-react";
 import Link from "next/link";
 import {
@@ -26,22 +27,40 @@ import { useComments } from "@/lib/hooks/use-comments";
 
 interface PostCardProps {
   post: Post;
+  currentUserId?: string;
   onLike?: (postId: string) => void;
   onComment?: (postId: string) => void;
   onShare?: (postId: string) => void;
   onSave?: (postId: string) => void;
+  onDelete?: (postId: string) => void;
 }
 
 export function PostCard({
   post,
+  currentUserId,
   onLike,
   onComment,
   onShare,
   onSave,
+  onDelete,
 }: PostCardProps) {
   const categoryInfo = postCategories.find((c) => c.value === post.category);
   const [showComments, setShowComments] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const { comments, loading: commentsLoading, likeComment } = useComments(post.id);
+
+  const isOwnPost = currentUserId === post.userId;
+
+  const handleDelete = async () => {
+    if (!confirm("Are you sure you want to delete this post?")) return;
+
+    setIsDeleting(true);
+    try {
+      await onDelete?.(post.id);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   return (
     <article className="rounded-lg border border-border bg-card p-3 transition-colors hover:bg-card/80">
@@ -89,13 +108,26 @@ export function PostCard({
               )}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="h-7 w-7">
-                    <MoreHorizontal className="h-3.5 w-3.5" />
+                  <Button variant="ghost" size="icon" className="h-7 w-7" disabled={isDeleting}>
+                    {isDeleting ? (
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    ) : (
+                      <MoreHorizontal className="h-3.5 w-3.5" />
+                    )}
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem>Report post</DropdownMenuItem>
                   <DropdownMenuItem>Copy link</DropdownMenuItem>
+                  {isOwnPost && (
+                    <DropdownMenuItem
+                      className="text-destructive focus:text-destructive"
+                      onClick={handleDelete}
+                    >
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      Delete post
+                    </DropdownMenuItem>
+                  )}
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>

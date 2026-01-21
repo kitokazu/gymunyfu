@@ -7,6 +7,7 @@ import { Loader2 } from "lucide-react";
 import { usePost } from "@/lib/hooks/use-post";
 import { useComments } from "@/lib/hooks/use-comments";
 import { useCurrentUser } from "@/lib/hooks/use-current-user";
+import { deletePost } from "@/lib/services";
 
 interface PostPageProps {
   params: Promise<{
@@ -42,6 +43,10 @@ export default function PostPage({ params }: PostPageProps) {
     await likeComment(commentId);
   };
 
+  const handleDeletePost = async (postId: string) => {
+    await deletePost(postId);
+  };
+
   return (
     <div className="min-h-screen">
       <div className="mx-auto max-w-2xl p-4">
@@ -53,6 +58,7 @@ export default function PostPage({ params }: PostPageProps) {
             onLike={likePost}
             onComment={handleComment}
             onLikeComment={handleLikeComment}
+            onDelete={handleDeletePost}
             commentsLoading={commentsLoading}
           />
         )}

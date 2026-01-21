@@ -14,6 +14,8 @@ import {
 import { db } from "../firebase";
 import type { Follow } from "../types";
 import { timestampToDate } from "./firestore-converters";
+import { getUserById } from "./user-service";
+import type { User } from "../types";
 
 const FOLLOWS_COLLECTION = "follows";
 const USERS_COLLECTION = "users";
@@ -162,4 +164,18 @@ export async function getFollowerCount(userId: string): Promise<number> {
 export async function getFollowingCount(userId: string): Promise<number> {
   const following = await getFollowing(userId);
   return following.length;
+}
+
+// Get follower users with profiles
+export async function getFollowerUsers(userId: string): Promise<User[]> {
+  const followerIds = await getFollowers(userId);
+  const users = await Promise.all(followerIds.map((id) => getUserById(id)));
+  return users.filter((u): u is User => !!u);
+}
+
+// Get following users with profiles
+export async function getFollowingUsers(userId: string): Promise<User[]> {
+  const followingIds = await getFollowing(userId);
+  const users = await Promise.all(followingIds.map((id) => getUserById(id)));
+  return users.filter((u): u is User => !!u);
 }

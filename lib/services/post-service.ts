@@ -13,10 +13,11 @@ import {
   onSnapshot,
   Timestamp,
   increment,
+  writeBatch,
   type Unsubscribe,
 } from "firebase/firestore";
 import { db } from "../firebase";
-import type { Post, User, PostCategory, PostTag } from "../types";
+import type { Post, User, PostCategory, PostTag, ProfileIcon } from "../types";
 import {
   docToPost,
   postToDoc,
@@ -199,6 +200,27 @@ export async function updatePost(
 export async function deletePost(postId: string): Promise<void> {
   const postRef = doc(db, POSTS_COLLECTION, postId);
   await deleteDoc(postRef);
+}
+
+// Update denormalized user profile icon across a user's posts
+export async function updateUserPostsProfileIcon(
+  userId: string,
+  profileIcon: ProfileIcon
+): Promise<void> {
+  const postsRef = collection(db, POSTS_COLLECTION);
+  const q = query(postsRef, where("userId", "==", userId));
+  const snapshot = await getDocs(q);
+
+  if (snapshot.empty) return;
+
+  const batch = writeBatch(db);
+  snapshot.forEach((docSnap) => {
+    batch.update(docSnap.ref, {
+      "user.profileIcon": profileIcon,
+    });
+  });
+
+  await batch.commit();
 }
 
 // Increment/decrement post engagement counts

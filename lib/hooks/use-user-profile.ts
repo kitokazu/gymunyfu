@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import type { User, Post, FinancialProfile } from "../types";
+import type { User, Post, FinancialProfile, ProfileIcon } from "../types";
 import {
   getUserByUsername,
   getUserById,
@@ -11,6 +11,7 @@ import {
   subscribeToUserPosts,
 } from "../services";
 import { useCurrentUser } from "./use-current-user";
+import { useAuth } from "../contexts/auth-context";
 
 interface UseUserProfileReturn {
   profile: User | null;
@@ -22,11 +23,13 @@ interface UseUserProfileReturn {
   followLoading: boolean;
   toggleFollowUser: () => Promise<void>;
   updateFinancialProfile: (profile: FinancialProfile) => Promise<void>;
+  updateProfileIcon: (icon: ProfileIcon) => Promise<void>;
   refresh: () => void;
 }
 
 export function useUserProfile(username: string): UseUserProfileReturn {
   const { user: currentUser } = useCurrentUser();
+  const { updateProfileIcon: updateProfileIconInAuth } = useAuth();
   const [profile, setProfile] = useState<User | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
@@ -157,6 +160,29 @@ export function useUserProfile(username: string): UseUserProfileReturn {
     setRefreshKey((prev) => prev + 1);
   }, []);
 
+  const handleUpdateProfileIcon = useCallback(
+    async (icon: ProfileIcon) => {
+      if (!profile || !currentUser || profile.id !== currentUser.id) return;
+
+      try {
+        await updateProfileIconInAuth(icon);
+
+        setProfile((prev) => (prev ? { ...prev, profileIcon: icon } : prev));
+        setPosts((prev) =>
+          prev.map((post) =>
+            post.userId === profile.id
+              ? { ...post, user: { ...post.user, profileIcon: icon } }
+              : post
+          )
+        );
+      } catch (err) {
+        console.error("Error updating profile icon:", err);
+        throw err;
+      }
+    },
+    [currentUser, profile, updateProfileIconInAuth]
+  );
+
   return {
     profile,
     posts,
@@ -167,6 +193,7 @@ export function useUserProfile(username: string): UseUserProfileReturn {
     followLoading,
     toggleFollowUser: handleToggleFollow,
     updateFinancialProfile: handleUpdateFinancialProfile,
+    updateProfileIcon: handleUpdateProfileIcon,
     refresh,
   };
 }

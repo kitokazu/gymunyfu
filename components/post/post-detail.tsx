@@ -9,6 +9,8 @@ import {
   Bookmark,
   MoreHorizontal,
   ArrowLeft,
+  Trash2,
+  Loader2,
 } from "lucide-react";
 import Link from "next/link";
 import {
@@ -21,6 +23,7 @@ import { formatDistanceToNow } from "date-fns";
 import { CommentSection } from "./comment-section";
 import { useRouter } from "next/navigation";
 import { ProfileIconComponent } from "@/components/ui/profile-icon";
+import { useState } from "react";
 
 interface PostDetailProps {
   post: Post;
@@ -31,6 +34,7 @@ interface PostDetailProps {
   onLikeComment?: (commentId: string) => void;
   onShare?: (postId: string) => void;
   onSave?: (postId: string) => void;
+  onDelete?: (postId: string) => void;
   commentsLoading?: boolean;
 }
 
@@ -43,9 +47,25 @@ export function PostDetail({
   onLikeComment,
   onShare,
   onSave,
+  onDelete,
   commentsLoading,
 }: PostDetailProps) {
   const router = useRouter();
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const isOwnPost = currentUser.id === post.userId;
+
+  const handleDelete = async () => {
+    if (!confirm("Are you sure you want to delete this post?")) return;
+
+    setIsDeleting(true);
+    try {
+      await onDelete?.(post.id);
+      router.push("/");
+    } catch (error) {
+      setIsDeleting(false);
+    }
+  };
 
   return (
     <div className="space-y-4">
@@ -93,13 +113,26 @@ export function PostDetail({
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0">
-                <MoreHorizontal className="h-4 w-4" />
+              <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0" disabled={isDeleting}>
+                {isDeleting ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <MoreHorizontal className="h-4 w-4" />
+                )}
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem>Report post</DropdownMenuItem>
               <DropdownMenuItem>Copy link</DropdownMenuItem>
+              {isOwnPost && (
+                <DropdownMenuItem
+                  className="text-destructive focus:text-destructive"
+                  onClick={handleDelete}
+                >
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Delete post
+                </DropdownMenuItem>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

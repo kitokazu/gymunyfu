@@ -24,6 +24,7 @@ export default function ProfilePage({ params }: ProfilePageProps) {
     followLoading,
     toggleFollowUser,
     updateFinancialProfile,
+    updateProfileIcon,
   } = useUserProfile(username);
 
   if (loading) {
@@ -47,6 +48,7 @@ export default function ProfilePage({ params }: ProfilePageProps) {
           isFollowing={isFollowingUser}
           onFollowToggle={toggleFollowUser}
           followLoading={followLoading}
+          onIconChange={updateProfileIcon}
         />
 
         <div className="px-4 mt-6">

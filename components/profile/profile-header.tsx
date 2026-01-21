@@ -15,8 +15,10 @@ import {
   Star,
   Loader2,
 } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { ProfileIconSelector } from "./profile-icon-selector";
+import { ConnectionsDialog } from "./connections-dialog";
+import { getFollowerUsers, getFollowingUsers } from "@/lib/services";
 
 interface ProfileHeaderProps {
   user: User;
@@ -65,6 +67,23 @@ export function ProfileHeader({
   followLoading,
 }: ProfileHeaderProps) {
   const [currentIcon, setCurrentIcon] = useState(user.profileIcon);
+  const followerButton = useMemo(
+    () => (
+      <Button variant="ghost" size="sm" className="p-0 h-auto font-semibold">
+        {user.followersCount.toLocaleString()} followers
+      </Button>
+    ),
+    [user.followersCount]
+  );
+
+  const followingButton = useMemo(
+    () => (
+      <Button variant="ghost" size="sm" className="p-0 h-auto font-semibold">
+        {user.followingCount.toLocaleString()} following
+      </Button>
+    ),
+    [user.followingCount]
+  );
 
   const handleFollowToggle = () => {
     onFollowToggle?.();
@@ -143,18 +162,16 @@ export function ProfileHeader({
 
             {/* Stats inline */}
             <div className="flex gap-3 text-xs">
-              <div>
-                <span className="font-semibold text-foreground">
-                  {user.followersCount.toLocaleString()}
-                </span>
-                <span className="text-muted-foreground ml-1">Followers</span>
-              </div>
-              <div>
-                <span className="font-semibold text-foreground">
-                  {user.followingCount.toLocaleString()}
-                </span>
-                <span className="text-muted-foreground ml-1">Following</span>
-              </div>
+              <ConnectionsDialog
+                title="Followers"
+                trigger={followerButton}
+                fetchUsers={() => getFollowerUsers(user.id)}
+              />
+              <ConnectionsDialog
+                title="Following"
+                trigger={followingButton}
+                fetchUsers={() => getFollowingUsers(user.id)}
+              />
               <div>
                 <span className="font-semibold text-foreground">
                   {user.postsCount.toLocaleString()}

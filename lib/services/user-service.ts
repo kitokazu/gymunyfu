@@ -8,6 +8,7 @@ import {
   collection,
   getDocs,
   limit,
+  orderBy,
 } from "firebase/firestore";
 import { db } from "../firebase";
 import type { User, FinancialProfile } from "../types";
@@ -101,4 +102,15 @@ export async function updateUserStats(
 export async function isUsernameAvailable(username: string): Promise<boolean> {
   const user = await getUserByUsername(username);
   return user === null;
+}
+
+// Get a list of users (ordered by creation date desc)
+export async function getUsers(): Promise<User[]> {
+  const usersRef = collection(db, USERS_COLLECTION);
+  const q = query(usersRef, orderBy("createdAt", "desc"));
+  const querySnapshot = await getDocs(q);
+
+  return querySnapshot.docs.map((docSnap) =>
+    docToUser(docSnap.id, docSnap.data() as UserDoc)
+  );
 }

@@ -5,18 +5,24 @@ import { usePathname } from "next/navigation"
 import { Home, Users, Bookmark, Settings, PlusCircle, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-import { mockUsers } from "@/lib/mock-data"
-
-const navigation = [
-  { name: "Feed", href: "/", icon: Home },
-  { name: "Profile", href: `/profile/${mockUsers[0].username}`, icon: User },
-  { name: "Users", href: "/users", icon: Users },
-  { name: "Saved", href: "/saved", icon: Bookmark },
-  { name: "Settings", href: "/settings", icon: Settings },
-]
+import { useCurrentUser } from "@/lib/hooks/use-current-user"
 
 export function Sidebar() {
   const pathname = usePathname()
+  const { user } = useCurrentUser()
+  const isAuthPage = ["/login", "/signup"].includes(pathname)
+
+  if (isAuthPage) {
+    return null
+  }
+
+  const navigation = [
+    { name: "Feed", href: "/", icon: Home },
+    { name: "Profile", href: user ? `/profile/${user.username}` : "/login", icon: User },
+    { name: "Users", href: "/users", icon: Users },
+    { name: "Saved", href: "/saved", icon: Bookmark },
+    { name: "Settings", href: "/settings", icon: Settings },
+  ]
 
   return (
     <aside className="hidden lg:flex lg:flex-col lg:w-64 lg:border-r lg:border-border">

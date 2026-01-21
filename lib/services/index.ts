@@ -26,6 +26,7 @@ export {
   updateFinancialProfile,
   updateUserStats,
   isUsernameAvailable,
+  getUsers,
 } from "./user-service";
 
 // Post service
@@ -40,6 +41,7 @@ export {
   updatePost,
   deletePost,
   updatePostCounts,
+  updateUserPostsProfileIcon,
 } from "./post-service";
 
 // Comment service
@@ -73,4 +75,6 @@ export {
   getFollowers,
   getFollowerCount,
   getFollowingCount,
+  getFollowerUsers,
+  getFollowingUsers,
 } from "./follow-service";
