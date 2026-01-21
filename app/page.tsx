@@ -5,24 +5,22 @@ import { CreatePostModal } from "@/components/feed/create-post-modal"
 import { PostCard } from "@/components/feed/post-card"
 import { TrendingSidebar } from "@/components/feed/trending-sidebar"
 import { FilterBar } from "@/components/feed/filter-bar"
-import { mockUsers, mockPosts } from "@/lib/mock-data"
 import type { PostTag, PostCategory } from "@/lib/types"
 import { useState, useMemo } from "react"
-import { Pen } from "lucide-react"
+import { Pen, Loader2 } from "lucide-react"
+import { usePosts } from "@/lib/hooks/use-posts"
+import { useCurrentUser } from "@/lib/hooks/use-current-user"
+import { createPost } from "@/lib/services"
 
 export default function HomePage() {
-  const currentUser = mockUsers[0]
-  const [posts, setPosts] = useState(mockPosts)
+  const { user: currentUser, loading: userLoading } = useCurrentUser()
+  const { posts, loading: postsLoading, likePost, refresh } = usePosts()
   const [selectedTags, setSelectedTags] = useState<PostTag[]>([])
   const [selectedCategories, setSelectedCategories] = useState<PostCategory[]>([])
   const [isCreatePostOpen, setIsCreatePostOpen] = useState(false)
 
-  const followerPosts = useMemo(() => {
-    return posts
-  }, [posts])
-
   const filteredPosts = useMemo(() => {
-    let filtered = followerPosts
+    let filtered = posts
 
     if (selectedCategories.length > 0) {
       filtered = filtered.filter((post) => selectedCategories.includes(post.category))
@@ -33,21 +31,7 @@ export default function HomePage() {
     }
 
     return filtered
-  }, [followerPosts, selectedTags, selectedCategories])
-
-  const handleLike = (postId: string) => {
-    setPosts((prev) =>
-      prev.map((post) =>
-        post.id === postId
-          ? {
-              ...post,
-              isLiked: !post.isLiked,
-              likesCount: post.isLiked ? post.likesCount - 1 : post.likesCount + 1,
-            }
-          : post,
-      ),
-    )
-  }
+  }, [posts, selectedTags, selectedCategories])
 
   const handleTagToggle = (tag: PostTag) => {
     setSelectedTags((prev) => (prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]))
@@ -63,6 +47,23 @@ export default function HomePage() {
     setSelectedTags([])
     setSelectedCategories([])
   }
+
+  const handleCreatePost = async (content: string, category: PostCategory, tags: PostTag[]) => {
+    if (!currentUser) return
+
+    try {
+      await createPost(currentUser, {
+        content,
+        category,
+        tags,
+      })
+      setIsCreatePostOpen(false)
+    } catch (error) {
+      console.error("Error creating post:", error)
+    }
+  }
+
+  const isLoading = userLoading || postsLoading
 
   return (
     <div className="flex min-h-screen pb-20 lg:pb-0">
@@ -85,18 +86,24 @@ export default function HomePage() {
             New Post
           </Button>
 
-          <div className="space-y-4">
-            {filteredPosts.length > 0 ? (
-              filteredPosts.map((post) => <PostCard key={post.id} post={post} onLike={handleLike} />)
-            ) : (
-              <div className="text-center py-12">
-                <p className="text-muted-foreground">No posts match your filters</p>
-                <Button variant="link" onClick={handleClearFilters} className="mt-2">
-                  Clear filters
-                </Button>
-              </div>
-            )}
-          </div>
+          {isLoading ? (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {filteredPosts.length > 0 ? (
+                filteredPosts.map((post) => <PostCard key={post.id} post={post} onLike={likePost} />)
+              ) : (
+                <div className="text-center py-12">
+                  <p className="text-muted-foreground">No posts match your filters</p>
+                  <Button variant="link" onClick={handleClearFilters} className="mt-2">
+                    Clear filters
+                  </Button>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
@@ -104,7 +111,14 @@ export default function HomePage() {
       <TrendingSidebar />
 
       {/* Create Post Modal */}
-      <CreatePostModal user={currentUser} open={isCreatePostOpen} onOpenChange={setIsCreatePostOpen} />
+      {currentUser && (
+        <CreatePostModal
+          user={currentUser}
+          open={isCreatePostOpen}
+          onOpenChange={setIsCreatePostOpen}
+          onPost={handleCreatePost}
+        />
+      )}
     </div>
   )
 }

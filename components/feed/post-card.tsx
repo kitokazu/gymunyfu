@@ -8,6 +8,7 @@ import {
   Share2,
   Bookmark,
   MoreHorizontal,
+  Loader2,
 } from "lucide-react";
 import Link from "next/link";
 import {
@@ -17,10 +18,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { formatDistanceToNow } from "date-fns";
-import { postCategories, mockComments } from "@/lib/mock-data";
+import { postCategories } from "@/lib/mock-data";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { ProfileIconComponent } from "@/components/ui/profile-icon";
+import { useComments } from "@/lib/hooks/use-comments";
 
 interface PostCardProps {
   post: Post;
@@ -39,7 +41,7 @@ export function PostCard({
 }: PostCardProps) {
   const categoryInfo = postCategories.find((c) => c.value === post.category);
   const [showComments, setShowComments] = useState(false);
-  const postComments = mockComments.filter((c) => c.postId === post.id);
+  const { comments, loading: commentsLoading, likeComment } = useComments(post.id);
 
   return (
     <article className="rounded-lg border border-border bg-card p-3 transition-colors hover:bg-card/80">
@@ -190,56 +192,67 @@ export function PostCard({
         </div>
       </div>
 
-      {showComments && postComments.length > 0 && (
+      {showComments && (
         <div className="mt-3 pt-3 border-t border-border space-y-3">
-          {postComments.map((comment) => (
-            <div key={comment.id} className="flex gap-2">
-              <Link href={`/profile/${comment.user.username}`}>
-                <ProfileIconComponent
-                  icon={comment.user.profileIcon}
-                  size="sm"
-                  className="shrink-0"
-                />
-              </Link>
-              <div className="flex-1 min-w-0">
-                <div className="rounded-lg bg-muted p-2">
-                  <div className="flex items-center gap-1.5 mb-0.5">
-                    <Link
-                      href={`/profile/${comment.user.username}`}
-                      className="font-semibold text-xs text-foreground hover:underline"
-                    >
-                      {comment.user.displayName}
-                    </Link>
-                    <time
-                      className="text-xs text-muted-foreground"
-                      dateTime={comment.createdAt.toISOString()}
-                    >
-                      {formatDistanceToNow(comment.createdAt, {
-                        addSuffix: true,
-                      })}
-                    </time>
-                  </div>
-                  <p className="text-xs text-foreground leading-relaxed">
-                    {comment.content}
-                  </p>
-                </div>
-                <div className="flex items-center gap-2 mt-1 px-1">
-                  <Button
-                    variant="ghost"
+          {commentsLoading ? (
+            <div className="flex items-center justify-center py-4">
+              <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+            </div>
+          ) : comments.length > 0 ? (
+            comments.map((comment) => (
+              <div key={comment.id} className="flex gap-2">
+                <Link href={`/profile/${comment.user.username}`}>
+                  <ProfileIconComponent
+                    icon={comment.user.profileIcon}
                     size="sm"
-                    className="h-auto p-0 text-xs text-muted-foreground hover:text-primary"
-                  >
-                    <Heart
-                      className={`h-3 w-3 mr-1 ${
-                        comment.isLiked ? "fill-primary text-primary" : ""
-                      }`}
-                    />
-                    {comment.likesCount > 0 && comment.likesCount}
-                  </Button>
+                    className="shrink-0"
+                  />
+                </Link>
+                <div className="flex-1 min-w-0">
+                  <div className="rounded-lg bg-muted p-2">
+                    <div className="flex items-center gap-1.5 mb-0.5">
+                      <Link
+                        href={`/profile/${comment.user.username}`}
+                        className="font-semibold text-xs text-foreground hover:underline"
+                      >
+                        {comment.user.displayName}
+                      </Link>
+                      <time
+                        className="text-xs text-muted-foreground"
+                        dateTime={comment.createdAt.toISOString()}
+                      >
+                        {formatDistanceToNow(comment.createdAt, {
+                          addSuffix: true,
+                        })}
+                      </time>
+                    </div>
+                    <p className="text-xs text-foreground leading-relaxed">
+                      {comment.content}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2 mt-1 px-1">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-auto p-0 text-xs text-muted-foreground hover:text-primary"
+                      onClick={() => likeComment(comment.id)}
+                    >
+                      <Heart
+                        className={`h-3 w-3 mr-1 ${
+                          comment.isLiked ? "fill-primary text-primary" : ""
+                        }`}
+                      />
+                      {comment.likesCount > 0 && comment.likesCount}
+                    </Button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <p className="text-xs text-muted-foreground text-center py-2">
+              No comments yet
+            </p>
+          )}
         </div>
       )}
     </article>

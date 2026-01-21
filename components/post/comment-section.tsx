@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import type { Comment, User } from "@/lib/types";
-import { Heart } from "lucide-react";
+import { Heart, Loader2 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import Link from "next/link";
 import { ProfileIconComponent } from "@/components/ui/profile-icon";
@@ -15,6 +15,7 @@ interface CommentSectionProps {
   currentUser: User;
   onAddComment?: (postId: string, content: string) => void;
   onLikeComment?: (commentId: string) => void;
+  loading?: boolean;
 }
 
 export function CommentSection({
@@ -23,13 +24,20 @@ export function CommentSection({
   currentUser,
   onAddComment,
   onLikeComment,
+  loading,
 }: CommentSectionProps) {
   const [newComment, setNewComment] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (newComment.trim()) {
-      onAddComment?.(postId, newComment);
-      setNewComment("");
+      setIsSubmitting(true);
+      try {
+        await onAddComment?.(postId, newComment);
+        setNewComment("");
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
 
@@ -53,10 +61,17 @@ export function CommentSection({
           <div className="flex justify-end">
             <Button
               onClick={handleSubmit}
-              disabled={!newComment.trim()}
+              disabled={!newComment.trim() || isSubmitting}
               size="sm"
             >
-              Comment
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Posting...
+                </>
+              ) : (
+                "Comment"
+              )}
             </Button>
           </div>
         </div>
@@ -64,7 +79,11 @@ export function CommentSection({
 
       {/* Comments List */}
       <div className="space-y-4">
-        {comments.length === 0 ? (
+        {loading ? (
+          <div className="flex items-center justify-center py-8">
+            <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+          </div>
+        ) : comments.length === 0 ? (
           <p className="text-center text-sm text-muted-foreground py-8">
             No comments yet. Be the first to comment!
           </p>

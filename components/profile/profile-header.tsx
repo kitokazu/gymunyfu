@@ -13,6 +13,7 @@ import {
   GraduationCap,
   Heart,
   Star,
+  Loader2,
 } from "lucide-react";
 import { useState } from "react";
 import { ProfileIconSelector } from "./profile-icon-selector";
@@ -23,6 +24,7 @@ interface ProfileHeaderProps {
   isFollowing?: boolean;
   onFollowToggle?: () => void;
   onIconChange?: (icon: ProfileIcon) => void;
+  followLoading?: boolean;
 }
 
 const getProfileIcon = (icon: ProfileIcon) => {
@@ -60,14 +62,11 @@ export function ProfileHeader({
   isFollowing: initialIsFollowing,
   onFollowToggle,
   onIconChange,
+  followLoading,
 }: ProfileHeaderProps) {
-  const [isFollowing, setIsFollowing] = useState(initialIsFollowing);
-  const [followersCount, setFollowersCount] = useState(user.followersCount);
   const [currentIcon, setCurrentIcon] = useState(user.profileIcon);
 
   const handleFollowToggle = () => {
-    setIsFollowing(!isFollowing);
-    setFollowersCount(isFollowing ? followersCount - 1 : followersCount + 1);
     onFollowToggle?.();
   };
 
@@ -118,11 +117,18 @@ export function ProfileHeader({
               ) : (
                 <Button
                   onClick={handleFollowToggle}
-                  variant={isFollowing ? "outline" : "default"}
+                  variant={initialIsFollowing ? "outline" : "default"}
                   size="sm"
                   className="flex-shrink-0"
+                  disabled={followLoading}
                 >
-                  {isFollowing ? "Following" : "Follow"}
+                  {followLoading ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : initialIsFollowing ? (
+                    "Following"
+                  ) : (
+                    "Follow"
+                  )}
                 </Button>
               )}
             </div>
@@ -139,7 +145,7 @@ export function ProfileHeader({
             <div className="flex gap-3 text-xs">
               <div>
                 <span className="font-semibold text-foreground">
-                  {followersCount.toLocaleString()}
+                  {user.followersCount.toLocaleString()}
                 </span>
                 <span className="text-muted-foreground ml-1">Followers</span>
               </div>

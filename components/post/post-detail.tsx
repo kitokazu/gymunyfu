@@ -31,6 +31,7 @@ interface PostDetailProps {
   onLikeComment?: (commentId: string) => void;
   onShare?: (postId: string) => void;
   onSave?: (postId: string) => void;
+  commentsLoading?: boolean;
 }
 
 export function PostDetail({
@@ -42,6 +43,7 @@ export function PostDetail({
   onLikeComment,
   onShare,
   onSave,
+  commentsLoading,
 }: PostDetailProps) {
   const router = useRouter();
 
@@ -212,6 +214,7 @@ export function PostDetail({
           currentUser={currentUser}
           onAddComment={onComment}
           onLikeComment={onLikeComment}
+          loading={commentsLoading}
         />
       </div>
     </div>

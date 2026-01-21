@@ -1,8 +1,11 @@
+"use client";
+
 import { ProfileHeader } from "@/components/profile/profile-header";
 import { ProfileTabs } from "@/components/profile/profile-tabs";
-import { mockUsers, mockPosts } from "@/lib/mock-data";
 import { notFound } from "next/navigation";
 import { use } from "react";
+import { Loader2 } from "lucide-react";
+import { useUserProfile } from "@/lib/hooks/use-user-profile";
 
 interface ProfilePageProps {
   params: Promise<{
@@ -12,34 +15,46 @@ interface ProfilePageProps {
 
 export default function ProfilePage({ params }: ProfilePageProps) {
   const { username } = use(params);
-  // Find user by username
-  const user = mockUsers.find((u) => u.username === username);
+  const {
+    profile,
+    posts,
+    loading,
+    isOwnProfile,
+    isFollowingUser,
+    followLoading,
+    toggleFollowUser,
+    updateFinancialProfile,
+  } = useUserProfile(username);
 
-  if (!user) {
-    notFound();
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      </div>
+    );
   }
 
-  // Get user's posts
-  const userPosts = mockPosts.filter((post) => post.userId === user.id);
-
-  // Mock current user for follow status
-  const currentUser = mockUsers[0];
-  const isOwnProfile = currentUser.id === user.id;
+  if (!profile) {
+    notFound();
+  }
 
   return (
     <div className="min-h-screen pb-20 lg:pb-0">
       <div className="mx-auto max-w-4xl">
         <ProfileHeader
-          user={user}
+          user={profile}
           isOwnProfile={isOwnProfile}
-          isFollowing={false}
+          isFollowing={isFollowingUser}
+          onFollowToggle={toggleFollowUser}
+          followLoading={followLoading}
         />
 
         <div className="px-4 mt-6">
           <ProfileTabs
-            user={user}
-            posts={userPosts}
+            user={profile}
+            posts={posts}
             isOwnProfile={isOwnProfile}
+            onFinancialProfileSave={updateFinancialProfile}
           />
         </div>
       </div>

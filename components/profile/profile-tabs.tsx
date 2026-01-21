@@ -3,7 +3,7 @@
 import type React from "react";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import type { User, Post } from "@/lib/types";
+import type { User, Post, FinancialProfile } from "@/lib/types";
 import { EditableFinancialOverview } from "./editable-financial-overview";
 import { FileText, DollarSign, Heart, MessageCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -13,9 +13,10 @@ interface ProfileTabsProps {
   user: User;
   posts: Post[];
   isOwnProfile?: boolean;
+  onFinancialProfileSave?: (profile: FinancialProfile) => void;
 }
 
-export function ProfileTabs({ user, posts, isOwnProfile }: ProfileTabsProps) {
+export function ProfileTabs({ user, posts, isOwnProfile, onFinancialProfileSave }: ProfileTabsProps) {
   const renderPosts = (posts: Post[]) => {
     if (posts.length === 0) {
       return (
@@ -88,6 +89,7 @@ export function ProfileTabs({ user, posts, isOwnProfile }: ProfileTabsProps) {
           <EditableFinancialOverview
             profile={user.financialProfile}
             isOwnProfile={isOwnProfile || false}
+            onSave={onFinancialProfileSave}
           />
         ) : (
           <div className="text-center py-12 text-muted-foreground">

@@ -1,9 +1,12 @@
 "use client";
 
 import { PostDetail } from "@/components/post/post-detail";
-import { mockPosts, mockComments, mockUsers } from "@/lib/mock-data";
 import { notFound } from "next/navigation";
-import { useState, use } from "react";
+import { use } from "react";
+import { Loader2 } from "lucide-react";
+import { usePost } from "@/lib/hooks/use-post";
+import { useComments } from "@/lib/hooks/use-comments";
+import { useCurrentUser } from "@/lib/hooks/use-current-user";
 
 interface PostPageProps {
   params: Promise<{
@@ -13,70 +16,46 @@ interface PostPageProps {
 
 export default function PostPage({ params }: PostPageProps) {
   const { id } = use(params);
-  const post = mockPosts.find((p) => p.id === id);
-  const currentUser = mockUsers[0];
+  const { user: currentUser, loading: userLoading } = useCurrentUser();
+  const { post, loading: postLoading, likePost } = usePost(id);
+  const { comments, loading: commentsLoading, addComment, likeComment } = useComments(id);
+
+  const isLoading = userLoading || postLoading;
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
 
   if (!post) {
     notFound();
   }
 
-  const [comments, setComments] = useState(
-    mockComments.filter((c) => c.postId === post.id)
-  );
-  const [postData, setPostData] = useState(post);
-
-  const handleLike = (postId: string) => {
-    setPostData((prev) => ({
-      ...prev,
-      isLiked: !prev.isLiked,
-      likesCount: prev.isLiked ? prev.likesCount - 1 : prev.likesCount + 1,
-    }));
+  const handleComment = async (postId: string, content: string) => {
+    await addComment(content);
   };
 
-  const handleComment = (postId: string, content: string) => {
-    const newComment = {
-      id: String(comments.length + 1),
-      postId,
-      userId: currentUser.id,
-      user: currentUser,
-      content,
-      createdAt: new Date(),
-      likesCount: 0,
-    };
-    setComments((prev) => [...prev, newComment]);
-    setPostData((prev) => ({
-      ...prev,
-      commentsCount: prev.commentsCount + 1,
-    }));
-  };
-
-  const handleLikeComment = (commentId: string) => {
-    setComments((prev) =>
-      prev.map((comment) =>
-        comment.id === commentId
-          ? {
-              ...comment,
-              isLiked: !comment.isLiked,
-              likesCount: comment.isLiked
-                ? comment.likesCount - 1
-                : comment.likesCount + 1,
-            }
-          : comment
-      )
-    );
+  const handleLikeComment = async (commentId: string) => {
+    await likeComment(commentId);
   };
 
   return (
     <div className="min-h-screen">
       <div className="mx-auto max-w-2xl p-4">
-        <PostDetail
-          post={postData}
-          comments={comments}
-          currentUser={currentUser}
-          onLike={handleLike}
-          onComment={handleComment}
-          onLikeComment={handleLikeComment}
-        />
+        {currentUser && (
+          <PostDetail
+            post={post}
+            comments={comments}
+            currentUser={currentUser}
+            onLike={likePost}
+            onComment={handleComment}
+            onLikeComment={handleLikeComment}
+            commentsLoading={commentsLoading}
+          />
+        )}
       </div>
     </div>
   );
