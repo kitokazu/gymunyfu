@@ -1,42 +1,56 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
-import { Textarea } from "@/components/ui/textarea"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import type { User, PostTag, PostCategory } from "@/lib/types"
-import { ImageIcon, Tag } from "lucide-react"
-import { postTags, postCategories } from "@/lib/mock-data"
-import { Badge } from "@/components/ui/badge"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import type { User, PostTag, PostCategory } from "@/lib/types";
+import { ImageIcon, Tag } from "lucide-react";
+import { postTags, postCategories } from "@/lib/mock-data";
+import { Badge } from "@/components/ui/badge";
+import { ProfileIconComponent } from "@/components/ui/profile-icon";
 
 interface CreatePostModalProps {
-  user: User
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  onPost?: (content: string, category: PostCategory, tags: PostTag[]) => void
+  user: User;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onPost?: (content: string, category: PostCategory, tags: PostTag[]) => void;
 }
 
-export function CreatePostModal({ user, open, onOpenChange, onPost }: CreatePostModalProps) {
-  const [content, setContent] = useState("")
-  const [selectedCategory, setSelectedCategory] = useState<PostCategory | null>(null)
-  const [selectedTags, setSelectedTags] = useState<PostTag[]>([])
-  const [showTagSelector, setShowTagSelector] = useState(false)
+export function CreatePostModal({
+  user,
+  open,
+  onOpenChange,
+  onPost,
+}: CreatePostModalProps) {
+  const [content, setContent] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<PostCategory | null>(
+    null
+  );
+  const [selectedTags, setSelectedTags] = useState<PostTag[]>([]);
+  const [showTagSelector, setShowTagSelector] = useState(false);
 
   const handlePost = () => {
     if (content.trim() && selectedCategory) {
-      onPost?.(content, selectedCategory, selectedTags)
-      setContent("")
-      setSelectedCategory(null)
-      setSelectedTags([])
-      setShowTagSelector(false)
-      onOpenChange(false)
+      onPost?.(content, selectedCategory, selectedTags);
+      setContent("");
+      setSelectedCategory(null);
+      setSelectedTags([]);
+      setShowTagSelector(false);
+      onOpenChange(false);
     }
-  }
+  };
 
   const toggleTag = (tag: PostTag) => {
-    setSelectedTags((prev) => (prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]))
-  }
+    setSelectedTags((prev) =>
+      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
+    );
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -46,10 +60,11 @@ export function CreatePostModal({ user, open, onOpenChange, onPost }: CreatePost
         </DialogHeader>
 
         <div className="flex gap-3">
-          <Avatar className="h-10 w-10 shrink-0">
-            <AvatarImage src={user.avatar || "/placeholder.svg"} alt={user.displayName} />
-            <AvatarFallback>{user.displayName[0]}</AvatarFallback>
-          </Avatar>
+          <ProfileIconComponent
+            icon={user.profileIcon}
+            size="lg"
+            className="shrink-0"
+          />
 
           <div className="flex-1 space-y-3">
             <Textarea
@@ -83,12 +98,17 @@ export function CreatePostModal({ user, open, onOpenChange, onPost }: CreatePost
             {selectedTags.length > 0 && (
               <div className="flex flex-wrap gap-2">
                 {selectedTags.map((tag) => {
-                  const tagInfo = postTags.find((t) => t.value === tag)
+                  const tagInfo = postTags.find((t) => t.value === tag);
                   return (
-                    <Badge key={tag} variant="secondary" className="cursor-pointer" onClick={() => toggleTag(tag)}>
+                    <Badge
+                      key={tag}
+                      variant="secondary"
+                      className="cursor-pointer"
+                      onClick={() => toggleTag(tag)}
+                    >
                       #{tagInfo?.label}
                     </Badge>
-                  )
+                  );
                 })}
               </div>
             )}
@@ -96,12 +116,16 @@ export function CreatePostModal({ user, open, onOpenChange, onPost }: CreatePost
             {/* Tag Selector */}
             {showTagSelector && (
               <div className="rounded-lg border border-border bg-muted/50 p-3">
-                <p className="text-sm font-medium mb-2 text-foreground">Select topic tags</p>
+                <p className="text-sm font-medium mb-2 text-foreground">
+                  Select topic tags
+                </p>
                 <div className="flex flex-wrap gap-2">
                   {postTags.map((tag) => (
                     <Badge
                       key={tag.value}
-                      variant={selectedTags.includes(tag.value) ? "default" : "outline"}
+                      variant={
+                        selectedTags.includes(tag.value) ? "default" : "outline"
+                      }
                       className="cursor-pointer"
                       onClick={() => toggleTag(tag.value)}
                     >
@@ -115,7 +139,11 @@ export function CreatePostModal({ user, open, onOpenChange, onPost }: CreatePost
             {/* Actions */}
             <div className="flex items-center justify-between border-t border-border pt-3">
               <div className="flex gap-1">
-                <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 text-muted-foreground"
+                >
                   <ImageIcon className="h-4 w-4" />
                 </Button>
                 <Button
@@ -128,7 +156,11 @@ export function CreatePostModal({ user, open, onOpenChange, onPost }: CreatePost
                 </Button>
               </div>
 
-              <Button onClick={handlePost} disabled={!content.trim() || !selectedCategory} size="sm">
+              <Button
+                onClick={handlePost}
+                disabled={!content.trim() || !selectedCategory}
+                size="sm"
+              >
                 Post
               </Button>
             </div>
@@ -136,5 +168,5 @@ export function CreatePostModal({ user, open, onOpenChange, onPost }: CreatePost
         </div>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

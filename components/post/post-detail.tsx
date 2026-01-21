@@ -1,24 +1,36 @@
-"use client"
+"use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
-import type { Post, Comment, User } from "@/lib/types"
-import { Heart, MessageCircle, Share2, Bookmark, MoreHorizontal, ArrowLeft } from "lucide-react"
-import Link from "next/link"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { formatDistanceToNow } from "date-fns"
-import { CommentSection } from "./comment-section"
-import { useRouter } from "next/navigation"
+import { Button } from "@/components/ui/button";
+import type { Post, Comment, User } from "@/lib/types";
+import {
+  Heart,
+  MessageCircle,
+  Share2,
+  Bookmark,
+  MoreHorizontal,
+  ArrowLeft,
+} from "lucide-react";
+import Link from "next/link";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { formatDistanceToNow } from "date-fns";
+import { CommentSection } from "./comment-section";
+import { useRouter } from "next/navigation";
+import { ProfileIconComponent } from "@/components/ui/profile-icon";
 
 interface PostDetailProps {
-  post: Post
-  comments: Comment[]
-  currentUser: User
-  onLike?: (postId: string) => void
-  onComment?: (postId: string, content: string) => void
-  onLikeComment?: (commentId: string) => void
-  onShare?: (postId: string) => void
-  onSave?: (postId: string) => void
+  post: Post;
+  comments: Comment[];
+  currentUser: User;
+  onLike?: (postId: string) => void;
+  onComment?: (postId: string, content: string) => void;
+  onLikeComment?: (commentId: string) => void;
+  onShare?: (postId: string) => void;
+  onSave?: (postId: string) => void;
 }
 
 export function PostDetail({
@@ -31,12 +43,17 @@ export function PostDetail({
   onShare,
   onSave,
 }: PostDetailProps) {
-  const router = useRouter()
+  const router = useRouter();
 
   return (
     <div className="space-y-4">
       {/* Back Button */}
-      <Button variant="ghost" size="sm" onClick={() => router.back()} className="gap-2">
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => router.back()}
+        className="gap-2"
+      >
         <ArrowLeft className="h-4 w-4" />
         Back
       </Button>
@@ -47,18 +64,21 @@ export function PostDetail({
         <div className="flex items-start justify-between gap-3 mb-4">
           <div className="flex gap-3 flex-1 min-w-0">
             <Link href={`/profile/${post.user.username}`}>
-              <Avatar className="h-12 w-12">
-                <AvatarImage src={post.user.avatar || "/placeholder.svg"} alt={post.user.displayName} />
-                <AvatarFallback>{post.user.displayName[0]}</AvatarFallback>
-              </Avatar>
+              <ProfileIconComponent icon={post.user.profileIcon} size="lg" />
             </Link>
 
             <div className="flex-1 min-w-0">
-              <Link href={`/profile/${post.user.username}`} className="font-semibold text-foreground hover:underline">
+              <Link
+                href={`/profile/${post.user.username}`}
+                className="font-semibold text-foreground hover:underline"
+              >
                 {post.user.displayName}
               </Link>
               <div className="flex items-center gap-2 flex-wrap text-sm text-muted-foreground">
-                <Link href={`/profile/${post.user.username}`} className="hover:underline">
+                <Link
+                  href={`/profile/${post.user.username}`}
+                  className="hover:underline"
+                >
                   @{post.user.username}
                 </Link>
                 <span>·</span>
@@ -84,7 +104,9 @@ export function PostDetail({
 
         {/* Post Content */}
         <div className="space-y-4">
-          <p className="text-foreground text-lg leading-relaxed whitespace-pre-wrap">{post.content}</p>
+          <p className="text-foreground text-lg leading-relaxed whitespace-pre-wrap">
+            {post.content}
+          </p>
 
           {/* Tags */}
           {post.tags.length > 0 && (
@@ -118,10 +140,16 @@ export function PostDetail({
           {/* Engagement Stats */}
           <div className="flex items-center gap-4 text-sm text-muted-foreground border-y border-border py-3">
             <span>
-              <strong className="text-foreground">{post.likesCount.toLocaleString()}</strong> likes
+              <strong className="text-foreground">
+                {post.likesCount.toLocaleString()}
+              </strong>{" "}
+              likes
             </span>
             <span>
-              <strong className="text-foreground">{post.commentsCount.toLocaleString()}</strong> comments
+              <strong className="text-foreground">
+                {post.commentsCount.toLocaleString()}
+              </strong>{" "}
+              comments
             </span>
           </div>
 
@@ -134,11 +162,19 @@ export function PostDetail({
                 className="gap-2 text-muted-foreground hover:text-primary"
                 onClick={() => onLike?.(post.id)}
               >
-                <Heart className={`h-5 w-5 ${post.isLiked ? "fill-primary text-primary" : ""}`} />
+                <Heart
+                  className={`h-5 w-5 ${
+                    post.isLiked ? "fill-primary text-primary" : ""
+                  }`}
+                />
                 <span>Like</span>
               </Button>
 
-              <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-primary">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="gap-2 text-muted-foreground hover:text-primary"
+              >
                 <MessageCircle className="h-5 w-5" />
                 <span>Comment</span>
               </Button>
@@ -179,5 +215,5 @@ export function PostDetail({
         />
       </div>
     </div>
-  )
+  );
 }

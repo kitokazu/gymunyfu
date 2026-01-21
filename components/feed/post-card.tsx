@@ -1,38 +1,56 @@
-"use client"
+"use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
-import type { Post } from "@/lib/types"
-import { Heart, MessageCircle, Share2, Bookmark, MoreHorizontal } from "lucide-react"
-import Link from "next/link"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { formatDistanceToNow } from "date-fns"
-import { postCategories, mockComments } from "@/lib/mock-data"
-import { Badge } from "@/components/ui/badge"
-import { useState } from "react"
+import { Button } from "@/components/ui/button";
+import type { Post } from "@/lib/types";
+import {
+  Heart,
+  MessageCircle,
+  Share2,
+  Bookmark,
+  MoreHorizontal,
+} from "lucide-react";
+import Link from "next/link";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { formatDistanceToNow } from "date-fns";
+import { postCategories, mockComments } from "@/lib/mock-data";
+import { Badge } from "@/components/ui/badge";
+import { useState } from "react";
+import { ProfileIconComponent } from "@/components/ui/profile-icon";
 
 interface PostCardProps {
-  post: Post
-  onLike?: (postId: string) => void
-  onComment?: (postId: string) => void
-  onShare?: (postId: string) => void
-  onSave?: (postId: string) => void
+  post: Post;
+  onLike?: (postId: string) => void;
+  onComment?: (postId: string) => void;
+  onShare?: (postId: string) => void;
+  onSave?: (postId: string) => void;
 }
 
-export function PostCard({ post, onLike, onComment, onShare, onSave }: PostCardProps) {
-  const categoryInfo = postCategories.find((c) => c.value === post.category)
-  const [showComments, setShowComments] = useState(false)
-  const postComments = mockComments.filter((c) => c.postId === post.id)
+export function PostCard({
+  post,
+  onLike,
+  onComment,
+  onShare,
+  onSave,
+}: PostCardProps) {
+  const categoryInfo = postCategories.find((c) => c.value === post.category);
+  const [showComments, setShowComments] = useState(false);
+  const postComments = mockComments.filter((c) => c.postId === post.id);
 
   return (
     <article className="rounded-lg border border-border bg-card p-3 transition-colors hover:bg-card/80">
       <div className="flex items-start justify-between gap-2">
         <div className="flex gap-2 flex-1 min-w-0">
           <Link href={`/profile/${post.user.username}`}>
-            <Avatar className="h-9 w-9 shrink-0">
-              <AvatarImage src={post.user.avatar || "/placeholder.svg"} alt={post.user.displayName} />
-              <AvatarFallback>{post.user.displayName[0]}</AvatarFallback>
-            </Avatar>
+            <ProfileIconComponent
+              icon={post.user.profileIcon}
+              size="md"
+              className="shrink-0"
+            />
           </Link>
 
           <div className="flex-1 min-w-0 flex items-center justify-between gap-2">
@@ -51,14 +69,21 @@ export function PostCard({ post, onLike, onComment, onShare, onSave }: PostCardP
                   @{post.user.username}
                 </Link>
               </div>
-              <time className="text-xs text-muted-foreground" dateTime={post.createdAt.toISOString()}>
+              <time
+                className="text-xs text-muted-foreground"
+                dateTime={post.createdAt.toISOString()}
+              >
                 {formatDistanceToNow(post.createdAt, { addSuffix: true })}
               </time>
             </div>
 
             <div className="flex items-center gap-2 shrink-0">
               {categoryInfo && (
-                <Badge className={`${categoryInfo.color} text-white text-xs px-2 py-0.5`}>{categoryInfo.label}</Badge>
+                <Badge
+                  className={`${categoryInfo.color} text-white text-xs px-2 py-0.5`}
+                >
+                  {categoryInfo.label}
+                </Badge>
               )}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -78,7 +103,9 @@ export function PostCard({ post, onLike, onComment, onShare, onSave }: PostCardP
 
       <Link href={`/post/${post.id}`} className="block">
         <div className="mt-2">
-          <p className="text-foreground text-sm leading-relaxed whitespace-pre-wrap">{post.content}</p>
+          <p className="text-foreground text-sm leading-relaxed whitespace-pre-wrap">
+            {post.content}
+          </p>
 
           {/* Topic Tags */}
           {post.tags.length > 0 && (
@@ -88,8 +115,8 @@ export function PostCard({ post, onLike, onComment, onShare, onSave }: PostCardP
                   key={tag}
                   className="inline-flex items-center rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary hover:bg-primary/20 transition-colors"
                   onClick={(e) => {
-                    e.preventDefault()
-                    window.location.href = `/tag/${tag}`
+                    e.preventDefault();
+                    window.location.href = `/tag/${tag}`;
                   }}
                 >
                   #{tag}
@@ -123,7 +150,11 @@ export function PostCard({ post, onLike, onComment, onShare, onSave }: PostCardP
             className="gap-1.5 text-muted-foreground hover:text-primary h-8 px-2"
             onClick={() => onLike?.(post.id)}
           >
-            <Heart className={`h-3.5 w-3.5 ${post.isLiked ? "fill-primary text-primary" : ""}`} />
+            <Heart
+              className={`h-3.5 w-3.5 ${
+                post.isLiked ? "fill-primary text-primary" : ""
+              }`}
+            />
             <span className="text-xs">{post.likesCount}</span>
           </Button>
 
@@ -164,10 +195,11 @@ export function PostCard({ post, onLike, onComment, onShare, onSave }: PostCardP
           {postComments.map((comment) => (
             <div key={comment.id} className="flex gap-2">
               <Link href={`/profile/${comment.user.username}`}>
-                <Avatar className="h-7 w-7 shrink-0">
-                  <AvatarImage src={comment.user.avatar || "/placeholder.svg"} alt={comment.user.displayName} />
-                  <AvatarFallback>{comment.user.displayName[0]}</AvatarFallback>
-                </Avatar>
+                <ProfileIconComponent
+                  icon={comment.user.profileIcon}
+                  size="sm"
+                  className="shrink-0"
+                />
               </Link>
               <div className="flex-1 min-w-0">
                 <div className="rounded-lg bg-muted p-2">
@@ -178,11 +210,18 @@ export function PostCard({ post, onLike, onComment, onShare, onSave }: PostCardP
                     >
                       {comment.user.displayName}
                     </Link>
-                    <time className="text-xs text-muted-foreground" dateTime={comment.createdAt.toISOString()}>
-                      {formatDistanceToNow(comment.createdAt, { addSuffix: true })}
+                    <time
+                      className="text-xs text-muted-foreground"
+                      dateTime={comment.createdAt.toISOString()}
+                    >
+                      {formatDistanceToNow(comment.createdAt, {
+                        addSuffix: true,
+                      })}
                     </time>
                   </div>
-                  <p className="text-xs text-foreground leading-relaxed">{comment.content}</p>
+                  <p className="text-xs text-foreground leading-relaxed">
+                    {comment.content}
+                  </p>
                 </div>
                 <div className="flex items-center gap-2 mt-1 px-1">
                   <Button
@@ -190,7 +229,11 @@ export function PostCard({ post, onLike, onComment, onShare, onSave }: PostCardP
                     size="sm"
                     className="h-auto p-0 text-xs text-muted-foreground hover:text-primary"
                   >
-                    <Heart className={`h-3 w-3 mr-1 ${comment.isLiked ? "fill-primary text-primary" : ""}`} />
+                    <Heart
+                      className={`h-3 w-3 mr-1 ${
+                        comment.isLiked ? "fill-primary text-primary" : ""
+                      }`}
+                    />
                     {comment.likesCount > 0 && comment.likesCount}
                   </Button>
                 </div>
@@ -200,5 +243,5 @@ export function PostCard({ post, onLike, onComment, onShare, onSave }: PostCardP
         </div>
       )}
     </article>
-  )
+  );
 }

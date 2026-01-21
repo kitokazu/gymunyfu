@@ -1,26 +1,69 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import type { User } from "@/lib/types";
-import { Briefcase } from "lucide-react";
+import type { User, ProfileIcon } from "@/lib/types";
+import {
+  Briefcase,
+  DollarSign,
+  TrendingUp,
+  PiggyBank,
+  CreditCard,
+  Home,
+  Car,
+  GraduationCap,
+  Heart,
+  Star,
+} from "lucide-react";
 import { useState } from "react";
+import { ProfileIconSelector } from "./profile-icon-selector";
 
 interface ProfileHeaderProps {
   user: User;
   isOwnProfile?: boolean;
   isFollowing?: boolean;
   onFollowToggle?: () => void;
+  onIconChange?: (icon: ProfileIcon) => void;
 }
+
+const getProfileIcon = (icon: ProfileIcon) => {
+  const iconProps = { className: "h-6 w-6" };
+
+  switch (icon) {
+    case "briefcase":
+      return <Briefcase {...iconProps} />;
+    case "dollar-sign":
+      return <DollarSign {...iconProps} />;
+    case "trending-up":
+      return <TrendingUp {...iconProps} />;
+    case "piggy-bank":
+      return <PiggyBank {...iconProps} />;
+    case "credit-card":
+      return <CreditCard {...iconProps} />;
+    case "home":
+      return <Home {...iconProps} />;
+    case "car":
+      return <Car {...iconProps} />;
+    case "graduation-cap":
+      return <GraduationCap {...iconProps} />;
+    case "heart":
+      return <Heart {...iconProps} />;
+    case "star":
+      return <Star {...iconProps} />;
+    default:
+      return <Briefcase {...iconProps} />;
+  }
+};
 
 export function ProfileHeader({
   user,
   isOwnProfile,
   isFollowing: initialIsFollowing,
   onFollowToggle,
+  onIconChange,
 }: ProfileHeaderProps) {
   const [isFollowing, setIsFollowing] = useState(initialIsFollowing);
   const [followersCount, setFollowersCount] = useState(user.followersCount);
+  const [currentIcon, setCurrentIcon] = useState(user.profileIcon);
 
   const handleFollowToggle = () => {
     setIsFollowing(!isFollowing);
@@ -28,20 +71,23 @@ export function ProfileHeader({
     onFollowToggle?.();
   };
 
+  const handleIconChange = (icon: ProfileIcon) => {
+    setCurrentIcon(icon);
+    onIconChange?.(icon);
+  };
+
   return (
-    <div className="w-full border-b border-border pb-3">
+    <div className="w-full border-b border-border pb-3 mt-4">
       <div className="px-4">
         <div className="flex items-center gap-4">
-          {/* Avatar on the left */}
-          <Avatar className="h-14 w-14 flex-shrink-0">
-            <AvatarImage
-              src={user.avatar || "/placeholder.svg"}
-              alt={user.displayName}
-            />
-            <AvatarFallback className="text-lg">
-              {user.displayName[0]}
-            </AvatarFallback>
-          </Avatar>
+          {/* Profile Icon on the left */}
+          <div className="h-14 w-14 flex-shrink-0 rounded-full bg-primary/10 flex items-center justify-center">
+            {currentIcon ? (
+              getProfileIcon(currentIcon)
+            ) : (
+              <Briefcase className="h-6 w-6 text-primary" />
+            )}
+          </div>
 
           {/* Info in the middle */}
           <div className="flex-1 min-w-0 space-y-1">
@@ -57,13 +103,18 @@ export function ProfileHeader({
 
               {/* Button on the right */}
               {isOwnProfile ? (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="flex-shrink-0 bg-transparent"
+                <ProfileIconSelector
+                  currentIcon={currentIcon}
+                  onIconSelect={handleIconChange}
                 >
-                  Edit Profile
-                </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex-shrink-0 bg-transparent"
+                  >
+                    Edit Profile
+                  </Button>
+                </ProfileIconSelector>
               ) : (
                 <Button
                   onClick={handleFollowToggle}
