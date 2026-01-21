@@ -21,6 +21,8 @@ interface ProfileIconProps {
   className?: string;
 }
 
+const iconColor = "text-emerald-600"
+
 const getProfileIcon = (icon: ProfileIcon, size: "sm" | "md" | "lg") => {
   const sizeClasses = {
     sm: "h-4 w-4",
@@ -28,31 +30,29 @@ const getProfileIcon = (icon: ProfileIcon, size: "sm" | "md" | "lg") => {
     lg: "h-8 w-8",
   };
 
-  const iconProps = { className: sizeClasses[size] };
-
   switch (icon) {
     case "briefcase":
-      return <Briefcase {...iconProps} />;
+      return <Briefcase className={`${sizeClasses[size]} ${iconColor}`} />;
     case "dollar-sign":
-      return <DollarSign {...iconProps} />;
+      return <DollarSign className={`${sizeClasses[size]} ${iconColor}`} />;
     case "trending-up":
-      return <TrendingUp {...iconProps} />;
+      return <TrendingUp className={`${sizeClasses[size]} ${iconColor}`} />;
     case "piggy-bank":
-      return <PiggyBank {...iconProps} />;
+      return <PiggyBank className={`${sizeClasses[size]} ${iconColor}`} />;
     case "credit-card":
-      return <CreditCard {...iconProps} />;
+      return <CreditCard className={`${sizeClasses[size]} ${iconColor}`} />;
     case "home":
-      return <Home {...iconProps} />;
+      return <Home className={`${sizeClasses[size]} ${iconColor}`} />;
     case "car":
-      return <Car {...iconProps} />;
+      return <Car className={`${sizeClasses[size]} ${iconColor}`} />;
     case "graduation-cap":
-      return <GraduationCap {...iconProps} />;
+      return <GraduationCap className={`${sizeClasses[size]} ${iconColor}`} />;
     case "heart":
-      return <Heart {...iconProps} />;
+      return <Heart className={`${sizeClasses[size]} ${iconColor}`} />;
     case "star":
-      return <Star {...iconProps} />;
+      return <Star className={`${sizeClasses[size]} ${iconColor}`} />;
     default:
-      return <Briefcase {...iconProps} />;
+      return <Briefcase className={`${sizeClasses[size]} ${iconColor}`} />;
   }
 };
 
@@ -73,7 +73,7 @@ export function ProfileIconComponent({
   return (
     <div
       className={cn(
-        "flex-shrink-0 rounded-full bg-primary/10 flex items-center justify-center",
+        "flex-shrink-0 rounded-full bg-emerald-50 flex items-center justify-center",
         getCircleSize(size),
         className
       )}
@@ -82,10 +82,7 @@ export function ProfileIconComponent({
         getProfileIcon(icon, size)
       ) : (
         <Briefcase
-          className={cn(
-            "text-primary",
-            size === "sm" ? "h-4 w-4" : size === "md" ? "h-6 w-6" : "h-8 w-8"
-          )}
+          className={cn(iconColor, size === "sm" ? "h-4 w-4" : size === "md" ? "h-6 w-6" : "h-8 w-8")}
         />
       )}
     </div>

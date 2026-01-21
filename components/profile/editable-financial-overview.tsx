@@ -58,23 +58,33 @@ export function EditableFinancialOverview({
   isOwnProfile,
   onSave,
 }: EditableFinancialOverviewProps) {
+  const withDefaults = (profile: FinancialProfile): FinancialProfile => ({
+    ...profile,
+    incomeBreakdown: profile.incomeBreakdown ?? [],
+    bankAccounts: profile.bankAccounts ?? [],
+    creditCards: profile.creditCards ?? [],
+    investments: profile.investments ?? [],
+    loans: profile.loans ?? [],
+  });
+
   const [editingSection, setEditingSection] = useState<EditingSection>(null);
-  const [profile, setProfile] = useState(initialProfile);
-  const [tempProfile, setTempProfile] = useState(initialProfile);
+  const [profile, setProfile] = useState<FinancialProfile>(withDefaults(initialProfile));
+  const [tempProfile, setTempProfile] = useState<FinancialProfile>(withDefaults(initialProfile));
 
   const handleEdit = (section: EditingSection) => {
     setEditingSection(section);
-    setTempProfile(profile);
+    setTempProfile(withDefaults(profile));
   };
 
   const handleSave = () => {
-    setProfile(tempProfile);
-    onSave?.(tempProfile);
+    const normalized = withDefaults(tempProfile);
+    setProfile(normalized);
+    onSave?.(normalized);
     setEditingSection(null);
   };
 
   const handleCancel = () => {
-    setTempProfile(profile);
+    setTempProfile(withDefaults(profile));
     setEditingSection(null);
   };
 
@@ -213,39 +223,38 @@ export function EditableFinancialOverview({
   return (
     <div className="space-y-4">
       {/* Income Breakdown */}
-      {profile.showIncome &&
-        currentProfile.incomeBreakdown &&
-        currentProfile.incomeBreakdown.length > 0 && (
-          <Card>
-            <CardHeader className="pb-3">
-              <div className="flex items-center justify-between">
-                <CardTitle className="flex items-center gap-1">
-                  <DollarSign className="h-5 w-5 text-primary" />
-                  Income Breakdown
-                </CardTitle>
-                {isOwnProfile && editingSection !== "income" && (
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8"
-                    onClick={() => handleEdit("income")}
-                  >
-                    <Pencil className="h-4 w-4" />
+      {profile.showIncome && (
+        <Card>
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <CardTitle className="flex items-center gap-1">
+                <DollarSign className="h-5 w-5 text-primary" />
+                Income Breakdown
+              </CardTitle>
+              {isOwnProfile && editingSection !== "income" && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8"
+                  onClick={() => handleEdit("income")}
+                >
+                  <Pencil className="h-4 w-4" />
+                </Button>
+              )}
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-3 pt-0">
+            <div className="space-y-2">
+              {editingSection === "income" && (
+                <div className="flex justify-end">
+                  <Button variant="ghost" size="sm" onClick={addIncomeSource}>
+                    <Plus className="h-4 w-4 mr-1" />
+                    Add Income Source
                   </Button>
-                )}
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-3 pt-0">
-              <div className="space-y-2">
-                {editingSection === "income" && (
-                  <div className="flex justify-end">
-                    <Button variant="ghost" size="sm" onClick={addIncomeSource}>
-                      <Plus className="h-4 w-4 mr-1" />
-                      Add Income Source
-                    </Button>
-                  </div>
-                )}
-                {currentProfile.incomeBreakdown.map((source, index) => {
+                </div>
+              )}
+              {currentProfile.incomeBreakdown && currentProfile.incomeBreakdown.length > 0 ? (
+                currentProfile.incomeBreakdown.map((source, index) => {
                   const percentage = currentProfile.totalIncome
                     ? (source.amount / currentProfile.totalIncome) * 100
                     : 0;
@@ -337,42 +346,47 @@ export function EditableFinancialOverview({
                       )}
                     </div>
                   );
-                })}
+                })
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  No income sources added
+                </p>
+              )}
+            </div>
+
+            {editingSection === "income" && (
+              <div className="flex items-center gap-2 pt-2">
+                <Switch
+                  id="show-amounts"
+                  checked={tempProfile.showIncomeAmounts ?? true}
+                  onCheckedChange={(checked) =>
+                    setTempProfile({
+                      ...tempProfile,
+                      showIncomeAmounts: checked,
+                    })
+                  }
+                />
+                <Label htmlFor="show-amounts" className="text-sm">
+                  Show income amounts (only visible to you)
+                </Label>
               </div>
+            )}
 
-              {editingSection === "income" && (
-                <div className="flex items-center gap-2 pt-2">
-                  <Switch
-                    id="show-amounts"
-                    checked={tempProfile.showIncomeAmounts ?? true}
-                    onCheckedChange={(checked) =>
-                      setTempProfile({
-                        ...tempProfile,
-                        showIncomeAmounts: checked,
-                      })
-                    }
-                  />
-                  <Label htmlFor="show-amounts" className="text-sm">
-                    Show income amounts (only visible to you)
-                  </Label>
-                </div>
-              )}
-
-              {editingSection === "income" && (
-                <div className="flex justify-end gap-2 pt-2 border-t">
-                  <Button variant="outline" size="sm" onClick={handleCancel}>
-                    <X className="h-4 w-4 mr-1.5" />
-                    Cancel
-                  </Button>
-                  <Button size="sm" onClick={handleSave}>
-                    <Save className="h-4 w-4 mr-1.5" />
-                    Save
-                  </Button>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        )}
+            {editingSection === "income" && (
+              <div className="flex justify-end gap-2 pt-2 border-t">
+                <Button variant="outline" size="sm" onClick={handleCancel}>
+                  <X className="h-4 w-4 mr-1.5" />
+                  Cancel
+                </Button>
+                <Button size="sm" onClick={handleSave}>
+                  <Save className="h-4 w-4 mr-1.5" />
+                  Save
+                </Button>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       {/* Assets Grid */}
       {profile.showAssets && (
@@ -400,7 +414,8 @@ export function EditableFinancialOverview({
               </CardHeader>
               <CardContent className="space-y-2">
                 {currentProfile.bankAccounts &&
-                currentProfile.bankAccounts.length > 0 ? (
+                (currentProfile.bankAccounts.length > 0 ||
+                  editingSection === "bankAccounts") ? (
                   <>
                     {currentProfile.bankAccounts.map((account, index) => (
                       <BankAccountItem
@@ -459,9 +474,9 @@ export function EditableFinancialOverview({
                     )}
                   </>
                 ) : (
-                  <p className="text-sm text-muted-foreground">
+                  <div className="text-sm text-muted-foreground">
                     No bank accounts added
-                  </p>
+                  </div>
                 )}
               </CardContent>
             </Card>
@@ -490,7 +505,8 @@ export function EditableFinancialOverview({
               </CardHeader>
               <CardContent className="space-y-2">
                 {currentProfile.creditCards &&
-                currentProfile.creditCards.length > 0 ? (
+                (currentProfile.creditCards.length > 0 ||
+                  editingSection === "creditCards") ? (
                   <>
                     {currentProfile.creditCards.map((card, index) => (
                       <CreditCardItem
@@ -549,9 +565,9 @@ export function EditableFinancialOverview({
                     )}
                   </>
                 ) : (
-                  <p className="text-sm text-muted-foreground">
+                  <div className="text-sm text-muted-foreground">
                     No credit cards added
-                  </p>
+                  </div>
                 )}
               </CardContent>
             </Card>
@@ -580,7 +596,8 @@ export function EditableFinancialOverview({
               </CardHeader>
               <CardContent>
                 {currentProfile.investments &&
-                currentProfile.investments.length > 0 ? (
+                (currentProfile.investments.length > 0 ||
+                  editingSection === "investments") ? (
                   <>
                     <div className="grid gap-3 sm:grid-cols-2">
                       {currentProfile.investments.map((investment, index) => (
@@ -769,9 +786,9 @@ export function EditableFinancialOverview({
                     )}
                   </>
                 ) : (
-                  <p className="text-sm text-muted-foreground">
+                  <div className="text-sm text-muted-foreground">
                     No investments added
-                  </p>
+                  </div>
                 )}
               </CardContent>
             </Card>
@@ -801,7 +818,8 @@ export function EditableFinancialOverview({
             </div>
           </CardHeader>
           <CardContent>
-            {currentProfile.loans && currentProfile.loans.length > 0 ? (
+            {currentProfile.loans &&
+            (currentProfile.loans.length > 0 || editingSection === "loans") ? (
               <>
                 <div className="grid gap-3 sm:grid-cols-2">
                   {currentProfile.loans.map((loan, index) => (
@@ -972,7 +990,7 @@ export function EditableFinancialOverview({
                 )}
               </>
             ) : (
-              <p className="text-sm text-muted-foreground">No loans added</p>
+              <div className="text-sm text-muted-foreground">No loans added</div>
             )}
           </CardContent>
         </Card>
